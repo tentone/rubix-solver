@@ -1,7 +1,10 @@
 #include <iostream>
+#include "cube.cpp"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    Cube cube = Cube();
+    
+    std::cout << cube.toString();
 }
 
