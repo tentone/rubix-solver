@@ -1,5 +1,36 @@
 #include <string>
+
 #include <cstdlib>
+
+/**
+ * List of possible cube movements.
+ * 
+ * Based on the list https://jperm.net/3x3/moves.
+ * 
+ * Simplified without double movements or cube rotations.
+ */
+enum CubeMoves {
+	U, // Up Face
+	D, // Down Face
+	R, // Right Face
+	L, // Left Face
+	F, // Front Face 
+	B, // Back Face
+	M, // Middle Row (Y)
+	E, // Middle Row (X)
+	S  // Middle Row (Z)
+};
+
+/**
+ * Direction at wich the cube movements can be performed
+ * 
+ * Can be clockwise or conuter-clockwise
+ */
+enum CubeMoveDirection {
+	CW,
+	CCW
+};
+
 
 class Cube {
 public: 
