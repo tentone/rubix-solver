@@ -73,6 +73,20 @@ public:
 		}
 	}
 
+	/**/
+	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx_start, int idx_end, CubeMoveDirection direction) {
+		int temp[3];
+
+		if (direction == CubeMoveDirection::CW) {
+			std::copy(this->cube[face_a], this->cube[face_a] + 3, temp);
+			std::copy(this->cube[face_b] + idx_start, this->cube[face_b] + idx_end, this->cube[face_a]);
+			std::copy(this->cube[face_c] + idx_start, this->cube[face_c] + idx_end, this->cube[face_b]);
+			std::copy(this->cube[face_d] + idx_start, this->cube[face_d] + idx_end, this->cube[face_c]);
+			std::copy(temp + idx_start, temp + idx_end, this->cube[face_d]);
+		}
+		
+	}
+
 	/**
 	 * Apply a move to the cube.
 	 */
@@ -82,11 +96,7 @@ public:
 				int temp[3];
 			
 				// Rotate rows
-				std::copy(this->cube[CubeFace::F], this->cube[CubeFace::F] + 3, temp);
-				std::copy(this->cube[CubeFace::L] + 0, this->cube[CubeFace::L] + 3, this->cube[CubeFace::F]);
-				std::copy(this->cube[CubeFace::B] + 0 , this->cube[CubeFace::B] + 3, this->cube[CubeFace::L]);
-				std::copy(this->cube[CubeFace::R] + 0, this->cube[CubeFace::R] + 3, this->cube[CubeFace::B]);
-				std::copy(temp + 0, temp + 3, this->cube[CubeFace::R]);
+				this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 0, 3, CubeMoveDirection::CW);
 
 				// Rotate up face
 				// TODO
