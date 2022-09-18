@@ -33,6 +33,8 @@ enum class CubeMoveDirection {
 
 /**
  * Index of the faces in the cube bidimensional array.
+ * 
+ * Each face values is stored as array.
  */
 class CubeFace {
 public:
@@ -51,6 +53,12 @@ public:
 	 * Data of the rubix cube stored as bidimensional array
 	 * 
 	 * The array is composed of 6 faces x 9 squares for each face.
+	 * 
+	 * Each face indexes are sorted by row.
+	 * 
+	 * [0, 1, 2,
+	 *  3, 4, 5,
+	 *  6, 7, 8]
 	 */
 	int cube[6][9];
 	
@@ -73,7 +81,11 @@ public:
 		}
 	}
 
-	/**/
+	/**
+	 * Rotate a row around the cube.
+	 *
+	 * The row crosses 4 different faces of the cube.
+	 */
 	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx_start, int idx_end, CubeMoveDirection direction) {
 		int temp[3];
 
@@ -84,8 +96,31 @@ public:
 			std::copy(this->cube[face_d] + idx_start, this->cube[face_d] + idx_end, this->cube[face_c]);
 			std::copy(temp + idx_start, temp + idx_end, this->cube[face_d]);
 		}
-		
 	}
+
+	/**
+	 * Rotate a face of the cube.
+	 * 
+	 * The face is rotated around itself.
+	 */
+	void rotateFace(int face, CubeMoveDirection direction) {
+		int *cface = this->cube[face];
+
+		int a = cface[0];
+		cface[0] = cface[3];
+		cface[3] = cface[6];
+		cface[6] = cface[7];
+		cface[7] = cface[8];
+		cface[8] = cface[5];
+		cface[5] = cface[2];
+		cface[2] = cface[1];
+		cface[1] = a;
+	}
+
+	/*
+	 * [0, 1, 2,
+	 *  3, 4, 5,
+	 *  6, 7, 8]*/
 
 	/**
 	 * Apply a move to the cube.
@@ -98,8 +133,9 @@ public:
 				// Rotate rows
 				this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 0, 3, CubeMoveDirection::CW);
 
-				// Rotate up face
-				// TODO
+				// Rotate faces
+				this->rotateFace(CubeFace::U, CubeMoveDirection::CW);
+				this->rotateFace(CubeFace::D, CubeMoveDirection::CW);
 			} else if (direction == CubeMoveDirection::CCW) {
 
 			}
