@@ -96,6 +96,13 @@ public:
 			std::copy(this->cube[face_d] + idx_start, this->cube[face_d] + idx_end, this->cube[face_c]);
 			std::copy(temp + idx_start, temp + idx_end, this->cube[face_d]);
 		}
+		else {
+			std::copy(this->cube[face_a], this->cube[face_a] + 3, temp);
+			std::copy(this->cube[face_d] + idx_start, this->cube[face_d] + idx_end, this->cube[face_a]);
+			std::copy(this->cube[face_c] + idx_start, this->cube[face_c] + idx_end, this->cube[face_d]);
+			std::copy(this->cube[face_b] + idx_start, this->cube[face_b] + idx_end, this->cube[face_c]);
+			std::copy(temp + idx_start, temp + idx_end, this->cube[face_b]);
+		}
 	}
 
 	/**
@@ -104,17 +111,33 @@ public:
 	 * The face is rotated around itself.
 	 */
 	void rotateFace(int face, CubeMoveDirection direction) {
-		int *cface = this->cube[face];
+		int* cface = this->cube[face];
 
-		int a = cface[0];
-		cface[0] = cface[3];
-		cface[3] = cface[6];
-		cface[6] = cface[7];
-		cface[7] = cface[8];
-		cface[8] = cface[5];
-		cface[5] = cface[2];
-		cface[2] = cface[1];
-		cface[1] = a;
+		if (direction == CubeMoveDirection::CW)
+		{
+			int a = cface[0];
+			cface[0] = cface[3];
+			cface[3] = cface[6];
+			cface[6] = cface[7];
+			cface[7] = cface[8];
+			cface[8] = cface[5];
+			cface[5] = cface[2];
+			cface[2] = cface[1];
+			cface[1] = a;
+		}
+		else
+		{
+			int a = cface[0];
+			cface[0] = cface[1];
+			cface[1] = cface[2];
+			cface[2] = cface[5];
+			cface[5] = cface[8];
+			cface[8] = cface[7];
+			cface[7] = cface[6];
+			cface[6] = cface[3];
+			cface[3] = a;
+		}
+
 	}
 
 	/*
@@ -126,20 +149,23 @@ public:
 	 * Apply a move to the cube.
 	 */
 	void move(CubeMove move, CubeMoveDirection direction) {
-		if (move == CubeMove::U) {
-			if (direction == CubeMoveDirection::CW) {
-				int temp[3];
-			
-				// Rotate rows
-				this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 0, 3, CubeMoveDirection::CW);
+		if (move == CubeMove::U) {		
+			// Rotate rows
+			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 0, 3, direction);
 
-				// Rotate faces
-				this->rotateFace(CubeFace::U, CubeMoveDirection::CW);
-				this->rotateFace(CubeFace::D, CubeMoveDirection::CW);
-			} else if (direction == CubeMoveDirection::CCW) {
-
-			}
+			// Rotate faces
+			this->rotateFace(CubeFace::U, direction);
+			this->rotateFace(CubeFace::D, direction);
 		}
+		else if (move == CubeMove::D) {
+			// Rotate rows
+			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 6, 9, direction);
+
+			// Rotate faces
+			this->rotateFace(CubeFace::U, direction);
+			this->rotateFace(CubeFace::D, direction);
+		}
+
 	}
 
 
