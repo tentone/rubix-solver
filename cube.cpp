@@ -81,12 +81,23 @@ public:
 		}
 	}
 
+	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx_a, int idx_b, int idx_c, CubeMoveDirection direction) {
+		int temp[3];
+
+		if (direction == CubeMoveDirection::CW) {
+			// TODO
+		}
+		else {
+			// TODO
+		}
+	}
+
 	/**
 	 * Rotate a row around the cube.
 	 *
 	 * The row crosses 4 different faces of the cube.
 	 */
-	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx_start, int idx_end, CubeMoveDirection direction) {
+	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx_start, int idx_end,  CubeMoveDirection direction) {
 		int temp[3];
 
 		if (direction == CubeMoveDirection::CW) {
@@ -149,6 +160,7 @@ public:
 	 * Apply a move to the cube.
 	 */
 	void move(CubeMove move, CubeMoveDirection direction) {
+		// Up
 		if (move == CubeMove::U) {		
 			// Rotate rows
 			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 0, 3, direction);
@@ -157,6 +169,12 @@ public:
 			this->rotateFace(CubeFace::U, direction);
 			this->rotateFace(CubeFace::D, direction);
 		}
+		// Middle Y
+		else if (move == CubeMove::M) {
+			// Rotate rows
+			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 3, 6, direction);
+		}
+		// Down
 		else if (move == CubeMove::D) {
 			// Rotate rows
 			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 6, 9, direction);
