@@ -81,15 +81,13 @@ public:
 		}
 	}
 
-	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx_a, int idx_b, int idx_c, CubeMoveDirection direction) {
-		int temp[3];
-
-		if (direction == CubeMoveDirection::CW) {
-			// TODO
-		}
-		else {
-			// TODO
-		}
+	/**
+	 * Copy data from face A to face B for specific indexes.
+	 */
+	void copyFaceRow(int face_a, int face_b, int aa, int ab, int ac, int ba, int bb, int bc) {
+		this->cube[face_a][aa] = this->cube[face_b][ba];
+		this->cube[face_a][ab] = this->cube[face_b][bb];
+		this->cube[face_a][ac] = this->cube[face_b][bc];
 	}
 
 	/**
@@ -185,9 +183,6 @@ public:
 		}
 
 	}
-
-
-
 
 	/**
 	 * Randomize the rubix cube.
