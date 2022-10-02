@@ -83,11 +83,26 @@ public:
 
 	/**
 	 * Copy data from face A to face B for specific indexes.
+	 * 
+	 * From origin to destination in specific order
 	 */
-	void copyFaceRow(int face_a, int face_b, int aa, int ab, int ac, int ba, int bb, int bc) {
-		this->cube[face_a][aa] = this->cube[face_b][ba];
-		this->cube[face_a][ab] = this->cube[face_b][bb];
-		this->cube[face_a][ac] = this->cube[face_b][bc];
+	void copyRowData(int* face_ori, int* face_dest, int idx_ori[3], int idx_dest[3]) {
+		for (int i = 0; i < 3; i++) {
+			face_ori[idx_ori[i]] = face_dest[idx_dest[i]];
+		}
+	}
+
+	/**
+	 * Rotate face cells for specific indexes
+	 */
+	void rotateFaceCells(int face_a, int face_b, int face_c, int face_d, int idx_a[3], int idx_b[3], int idx_c[3], int idx_d[3]) {
+		int temp[3];
+
+		copyRowData(this->cube[face_a], temp, idx_a, idx_a);
+		copyRowData(this->cube[face_b], this->cube[face_a], idx_b, idx_a);
+		copyRowData(this->cube[face_c], this->cube[face_b], idx_c, idx_b);
+		copyRowData(this->cube[face_d], this->cube[face_c], idx_d, idx_c);
+		copyRowData(temp, this->cube[face_d], idx_a, idx_d);
 	}
 
 	/**
@@ -95,22 +110,12 @@ public:
 	 *
 	 * The row crosses 4 different faces of the cube.
 	 */
-	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx_start, int idx_end,  CubeMoveDirection direction) {
-		int temp[3];
-
+	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx[3], CubeMoveDirection direction) {
 		if (direction == CubeMoveDirection::CW) {
-			std::copy(this->cube[face_a], this->cube[face_a] + 3, temp);
-			std::copy(this->cube[face_b] + idx_start, this->cube[face_b] + idx_end, this->cube[face_a]);
-			std::copy(this->cube[face_c] + idx_start, this->cube[face_c] + idx_end, this->cube[face_b]);
-			std::copy(this->cube[face_d] + idx_start, this->cube[face_d] + idx_end, this->cube[face_c]);
-			std::copy(temp + idx_start, temp + idx_end, this->cube[face_d]);
+			rotateFaceCells(face_a, face_b, face_c, face_d, idx, idx, idx, idx);
 		}
 		else {
-			std::copy(this->cube[face_a], this->cube[face_a] + 3, temp);
-			std::copy(this->cube[face_d] + idx_start, this->cube[face_d] + idx_end, this->cube[face_a]);
-			std::copy(this->cube[face_c] + idx_start, this->cube[face_c] + idx_end, this->cube[face_d]);
-			std::copy(this->cube[face_b] + idx_start, this->cube[face_b] + idx_end, this->cube[face_c]);
-			std::copy(temp + idx_start, temp + idx_end, this->cube[face_b]);
+			rotateFaceCells(face_d, face_c, face_b, face_a, idx, idx, idx, idx);
 		}
 	}
 
@@ -159,9 +164,11 @@ public:
 	 */
 	void move(CubeMove move, CubeMoveDirection direction) {
 		// Up
-		if (move == CubeMove::U) {		
+		if (move == CubeMove::U) {
+			int idx[3] = { 0, 1, 2 };
+
 			// Rotate rows
-			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 0, 3, direction);
+			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
 
 			// Rotate faces
 			this->rotateFace(CubeFace::U, direction);
@@ -169,13 +176,16 @@ public:
 		}
 		// Middle Y
 		else if (move == CubeMove::M) {
+			int idx[3] = { 3, 4, 5 };
 			// Rotate rows
-			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 3, 6, direction);
+			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
 		}
 		// Down
 		else if (move == CubeMove::D) {
+			int idx[3] = { 6, 7, 8 };
+
 			// Rotate rows
-			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, 6, 9, direction);
+			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
 
 			// Rotate faces
 			this->rotateFace(CubeFace::U, direction);
