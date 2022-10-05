@@ -87,8 +87,9 @@ public:
 	 * From origin to destination in specific order
 	 */
 	void copyRowData(int* face_ori, int* face_dest, int idx_ori[3], int idx_dest[3]) {
+
 		for (int i = 0; i < 3; i++) {
-			face_ori[idx_ori[i]] = face_dest[idx_dest[i]];
+			face_dest[idx_dest[i]] = face_ori[idx_ori[i]];
 		}
 	}
 
@@ -96,13 +97,14 @@ public:
 	 * Rotate face cells for specific indexes
 	 */
 	void rotateFaceCells(int face_a, int face_b, int face_c, int face_d, int idx_a[3], int idx_b[3], int idx_c[3], int idx_d[3]) {
-		int temp[3];
+		int temp[3] = { 0, 0, 0 };
+		int idx_temp[3] = {0, 1, 2};
 
-		copyRowData(this->cube[face_a], temp, idx_a, idx_a);
+		copyRowData(this->cube[face_a], temp, idx_a, idx_temp);
 		copyRowData(this->cube[face_b], this->cube[face_a], idx_b, idx_a);
 		copyRowData(this->cube[face_c], this->cube[face_b], idx_c, idx_b);
 		copyRowData(this->cube[face_d], this->cube[face_c], idx_d, idx_c);
-		copyRowData(temp, this->cube[face_d], idx_a, idx_d);
+		copyRowData(temp, this->cube[face_d], idx_temp, idx_d);
 	}
 
 	/**
@@ -114,7 +116,7 @@ public:
 		if (direction == CubeMoveDirection::CW) {
 			rotateFaceCells(face_a, face_b, face_c, face_d, idx, idx, idx, idx);
 		}
-		else {
+		else if (direction == CubeMoveDirection::CCW) {
 			rotateFaceCells(face_d, face_c, face_b, face_a, idx, idx, idx, idx);
 		}
 	}
@@ -154,11 +156,6 @@ public:
 
 	}
 
-	/*
-	 * [0, 1, 2,
-	 *  3, 4, 5,
-	 *  6, 7, 8]*/
-
 	/**
 	 * Apply a move to the cube.
 	 */
@@ -177,6 +174,7 @@ public:
 		// Middle Y
 		else if (move == CubeMove::M) {
 			int idx[3] = { 3, 4, 5 };
+
 			// Rotate rows
 			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
 		}
