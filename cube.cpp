@@ -173,61 +173,92 @@ public:
 		if (move == CubeMove::U) {
 			int idx[3] = { 0, 1, 2 };
 
-			// Rotate rows
-			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
 
-			// Rotate faces
-			this->rotateFace(CubeFace::U, direction);
-			this->rotateFace(CubeFace::D, direction);
+			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
+			this->rotateFace(CubeFace::U, direction);;
 		}
 		// Down Face
 		else if (move == CubeMove::D) {
 			int idx[3] = { 6, 7, 8 };
 
-			// Rotate rows
 			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
-
-			// Rotate faces
-			this->rotateFace(CubeFace::U, direction);
 			this->rotateFace(CubeFace::D, direction);
 		}
 		// Right Face
 		else if (move == CubeMove::R) {
-			// TODO
+			int idx[4][3] = {
+				{ 2, 5, 8 },
+				{ 2, 5, 8 },
+				{ 6, 3, 0 },
+				{ 2, 5, 8 }
+			};
+
+			this->rotateRow(CubeFace::F, CubeFace::U, CubeFace::B, CubeFace::D, idx[0], idx[1], idx[2], idx[3], direction);
+			this->rotateFace(CubeFace::R, direction);
 		}
 		// Left face
 		else if (move == CubeMove::L) {
-			// TODO
+			int idx[4][3] = {
+				{ 0, 3, 6 },
+				{ 0, 3, 6 },
+				{ 8, 5, 2 },
+				{ 0, 3, 6 }
+			};
+
+			this->rotateRow(CubeFace::F, CubeFace::U, CubeFace::B, CubeFace::D, idx[0], idx[1], idx[2], idx[3], direction);
+			this->rotateFace(CubeFace::L, direction);
 		}
 		// Front face
 		else if (move == CubeMove::F) {
-			// TODO
+			int idx[4][3] = {
+				{ 2, 5, 8 },
+				{ 8, 7, 6 },
+				{ 6, 3, 0 },
+				{ 0, 1, 2 }
+			};
+
+			this->rotateRow(CubeFace::L, CubeFace::U, CubeFace::R, CubeFace::D, idx[0], idx[1], idx[2], idx[3], direction);
+			this->rotateFace(CubeFace::F, direction);
 		}
 		// Back face
 		else if (move == CubeMove::B) {
-			// TODO
+			int idx[4][3] = {
+				{ 0, 3, 6 },
+				{ 2, 1, 0 },
+				{ 8, 5, 2 },
+				{ 6, 7, 8 }
+			};
+
+			this->rotateRow(CubeFace::L, CubeFace::U, CubeFace::R, CubeFace::D, idx[0], idx[1], idx[2], idx[3], direction);
+			this->rotateFace(CubeFace::B, direction);
 		}
 		// Middle E
 		else if (move == CubeMove::E) {
 			int idx[3] = { 3, 4, 5 };
 
-			// Rotate rows
 			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
 		}
 		// Middle M
 		else if (move == CubeMove::M) {
-			int idx[3] = { 1, 4, 7 };
+			int idx[4][3] = {
+				{ 1, 4, 7 },
+				{ 1, 4, 7 },
+				{ 1, 4, 7 },
+				{ 7, 4, 1 }
+			};
 
-			// Rotate rows
-			this->rotateRow(CubeFace::U, CubeFace::F, CubeFace::D, CubeFace::B, idx, direction);
+			this->rotateRow(CubeFace::U, CubeFace::F, CubeFace::D, CubeFace::B, idx[0], idx[1], idx[2], idx[3], direction);
 		}
 		// Middle Z
 		else if (move == CubeMove::S) {
-			int idx_a[3] = { 3, 4, 5 };
-			int idx_b[3] = { 1, 4, 7 };
+			int idx[4][3] = {
+				{ 3, 4, 5 },
+				{ 1, 4, 7 },
+				{ 5, 4, 3 },
+				{ 7, 4, 1 }
+			};
 
-			// Rotate rows
-			this->rotateRow(CubeFace::U, CubeFace::L, CubeFace::D, CubeFace::R, idx_a, idx_b, idx_a, idx_b, direction);
+			this->rotateRow(CubeFace::U, CubeFace::R, CubeFace::D, CubeFace::L, idx[0], idx[1], idx[2], idx[3], direction);
 		}
 	}
 
