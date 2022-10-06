@@ -9,16 +9,17 @@
  * 
  * Simplified without double movements or cube rotations.
  */
-enum class CubeMove {
-	U, // Up Face
-	D, // Down Face
-	R, // Right Face
-	L, // Left Face
-	F, // Front Face 
-	B, // Back Face
-	M, // Middle Row (Y)
-	E, // Middle Row (X)
-	S  // Middle Row (Z)
+class CubeMove {
+public:
+	static const int U = 0; // Up Face
+	static const int D = 1; // Down Face
+	static const int R = 2; // Right Face
+	static const int L = 3; // Left Face
+	static const int F = 4; // Front Face 
+	static const int B = 5; // Back Face
+	static const int M = 6; // Middle Row (Y)
+	static const int E = 7; // Middle Row (X)
+	static const int S = 8; // Middle Row (Z)
 };
 
 /**
@@ -26,9 +27,10 @@ enum class CubeMove {
  * 
  * Can be clockwise or conuter-clockwise
  */
-enum class CubeMoveDirection {
-	CW,
-	CCW
+class CubeMoveDirection {
+public:
+	static const int CW = 0;
+	static const int CCW = 1;
 };
 
 /**
@@ -100,7 +102,7 @@ public:
 	 * 
 	 * Receives a list of faces by order and indexes to store the cells by order for each row.
 	 */
-	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx_a[3], int idx_b[3], int idx_c[3], int idx_d[3], CubeMoveDirection direction) {
+	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx_a[3], int idx_b[3], int idx_c[3], int idx_d[3], int direction) {
 		int temp[3] = { 0, 0, 0 };
 		int idx_temp[3] = {0, 1, 2};
 
@@ -126,7 +128,7 @@ public:
 	 *
 	 * The row crosses 4 different faces of the cube.
 	 */
-	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx[3], CubeMoveDirection direction) {
+	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx[3], int direction) {
 		rotateRow(face_a, face_b, face_c, face_d, idx, idx, idx, idx, direction);
 	}
 
@@ -135,7 +137,7 @@ public:
 	 * 
 	 * The face is rotated around itself.
 	 */
-	void rotateFace(int face, CubeMoveDirection direction) {
+	void rotateFace(int face, int direction) {
 		int* cface = this->cube[face];
 
 		if (direction == CubeMoveDirection::CW)
@@ -168,7 +170,7 @@ public:
 	/**
 	 * Apply a move to the cube.
 	 */
-	void move(CubeMove move, CubeMoveDirection direction) {
+	void move(int move, int direction) {
 		// Up Face
 		if (move == CubeMove::U) {
 			int idx[3] = { 0, 1, 2 };
