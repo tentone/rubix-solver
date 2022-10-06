@@ -29,8 +29,8 @@ public:
  */
 class CubeMoveDirection {
 public:
-	static const int CW = 0;
-	static const int CCW = 1;
+	static const int CW = 0; // Clock-Wise
+	static const int CCW = 1; // Counter Clock-Wise
 };
 
 /**
