@@ -173,7 +173,6 @@ public:
 		if (move == CubeMove::U) {
 			int idx[3] = { 0, 1, 2 };
 
-
 			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
 			this->rotateFace(CubeFace::U, direction);;
 		}
@@ -272,7 +271,10 @@ public:
 	 * @param steps - How many scrambling steps to perform.
 	 */
 	void scramble(int steps) {
-		// TODO <ADD CODE HERE>
+
+		for (int i = 0; i < steps; i++) {
+			// TODO <ADD CODE HERE>
+		}
 	}
 
 	/**
