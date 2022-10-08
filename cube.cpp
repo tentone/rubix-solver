@@ -97,6 +97,8 @@ public:
 
 	/**
 	 * Rotate face cells of a row for eith specific indexex for each storage.
+	 * 
+	 * A <- B <- C <- D
 	 *
 	 * The row crosses 4 different faces of the cube.
 	 * 
@@ -106,14 +108,14 @@ public:
 		int temp[3] = { 0, 0, 0 };
 		int idx_temp[3] = {0, 1, 2};
 
-		if (direction == CubeMoveDirection::CW) {
+		if (direction == CubeMoveDirection::CCW) {
 			copyRowData(this->cube[face_a], temp, idx_a, idx_temp);
 			copyRowData(this->cube[face_b], this->cube[face_a], idx_b, idx_a);
 			copyRowData(this->cube[face_c], this->cube[face_b], idx_c, idx_b);
 			copyRowData(this->cube[face_d], this->cube[face_c], idx_d, idx_c);
 			copyRowData(temp, this->cube[face_d], idx_temp, idx_d);
 		}
-		else if (direction == CubeMoveDirection::CCW)
+		else if (direction == CubeMoveDirection::CW)
 		{
 			copyRowData(this->cube[face_d], temp, idx_d, idx_temp);
 			copyRowData(this->cube[face_c], this->cube[face_d], idx_c, idx_d);
@@ -126,6 +128,8 @@ public:
 	/**
 	 * Rotate a row around the cube.
 	 *
+	 * A <- B <- C <- D
+	 * 
 	 * The row crosses 4 different faces of the cube.
 	 */
 	void rotateRow(int face_a, int face_b, int face_c, int face_d, int idx[3], int direction) {
@@ -182,7 +186,7 @@ public:
 		else if (move == CubeMove::D) {
 			int idx[3] = { 6, 7, 8 };
 
-			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
+			this->rotateRow(CubeFace::F, CubeFace::R, CubeFace::B, CubeFace::L, idx, direction);
 			this->rotateFace(CubeFace::D, direction);
 		}
 		// Right Face
@@ -206,7 +210,7 @@ public:
 				{ 0, 3, 6 }
 			};
 
-			this->rotateRow(CubeFace::F, CubeFace::U, CubeFace::B, CubeFace::D, idx[0], idx[1], idx[2], idx[3], direction);
+			this->rotateRow(CubeFace::F, CubeFace::D, CubeFace::B, CubeFace::U, idx[0], idx[1], idx[2], idx[3], direction);
 			this->rotateFace(CubeFace::L, direction);
 		}
 		// Front face
