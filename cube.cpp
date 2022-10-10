@@ -1,6 +1,7 @@
 #include <string>
 
 #include <cstdlib>
+#include <time.h>
 
 /**
  * List of possible cube movements.
@@ -276,10 +277,13 @@ public:
 	 * 
 	 * @param steps - How many scrambling steps to perform.
 	 */
-	void scramble(int steps) {
+	void scramble(int steps = 100) {
+		srand(time(0));
 
 		for (int i = 0; i < steps; i++) {
-			// TODO <ADD CODE HERE>
+			int direction = rand() % 1;
+			int action = rand() % 5;
+			this->move(action, direction);
 		}
 	}
 
@@ -290,7 +294,6 @@ public:
 	 */
 	std::string toString() {
 		std::string out = "";
-
 		
 		for (int f = 0; f < 6; f++) {
 			out += "F" + std::to_string(f) + "\n[";
