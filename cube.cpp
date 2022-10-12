@@ -277,7 +277,7 @@ public:
 	 * 
 	 * @param steps - How many scrambling steps to perform.
 	 */
-	void scramble(int steps = 100) {
+	void scramble(int steps = 1000) {
 		srand(time(0));
 
 		for (int i = 0; i < steps; i++) {
@@ -285,6 +285,22 @@ public:
 			int action = rand() % 5;
 			this->move(action, direction);
 		}
+	}
+
+	/**
+	 * Check if the cube is solved.
+	 */
+	bool solved() {
+		for (int f = 0; f < 6; f++) {
+			int val = this->cube[f][0];
+			for (int s = 1; s < 9; s++) {
+				if (val != this->cube[f][s]) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**
