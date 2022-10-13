@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="solver.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
