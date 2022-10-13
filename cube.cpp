@@ -6,14 +6,6 @@
 #include <list>
 
 /**
- * Cube solution step structure that contains the move and direction.
- */
-struct CubeStep {
-	int move;
-	int direction;
-};
-
-/**
  * List of possible cube movements.
  * 
  * Based on the list https://jperm.net/3x3/moves.
@@ -276,14 +268,6 @@ public:
 
 			this->rotateRow(CubeFace::U, CubeFace::R, CubeFace::D, CubeFace::L, idx[0], idx[1], idx[2], idx[3], direction);
 		}
-	}
-
-	std::list<CubeStep> solve() {
-		std::list<CubeStep> solution = {};
-		
-		// TODO
-
-		return solution;
 	}
 
 	/**
