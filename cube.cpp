@@ -69,10 +69,20 @@ public:
 	
 	/**
 	 * Create a new rubix cube by default each face is filled with the same color.
-
 	 */
 	Cube() {
 		this->clear();
+	}
+
+	/**
+	 * Copy constructor do duplicate cube values.
+	 */
+	Cube(const Cube& rhs) {
+		for (int f = 0; f < 6; f++) {
+			for (int s = 0; s < 9; s++) {
+				this->cube[f][s] = rhs.cube[f][s];
+			}
+		}
 	}
 
 	/**
@@ -92,7 +102,6 @@ public:
 	 * From origin to destination in specific order
 	 */
 	void copyRowData(int* face_ori, int* face_dest, int idx_ori[3], int idx_dest[3]) {
-
 		for (int i = 0; i < 3; i++) {
 			face_dest[idx_dest[i]] = face_ori[idx_ori[i]];
 		}
