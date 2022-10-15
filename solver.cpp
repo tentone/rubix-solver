@@ -31,6 +31,12 @@ public:
 	 * If no solution is found for the cube, the code will trow an exception.
 	 */
 	static std::list<CubeStep> solveBF(Cube cube, int depth=100, std::list<CubeStep> solution = {}) {
+		if (depth == 0) {
+			// TODO <ERROR>
+			return solution;
+
+		}
+
 		if (cube.solved()) {
 			return solution;
 		}
