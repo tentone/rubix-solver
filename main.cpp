@@ -1,5 +1,6 @@
 #include <iostream>
 #include "cube.cpp"
+#include "solver.cpp"
 
 int main()
 {
@@ -19,6 +20,9 @@ int main()
 
     cube.scramble();
 
-    std::cout << cube.toString();
+    bool sol = CubeSolver::solveBF(cube);
+    
+    std::cout << sol << std::endl;
+    std::cout << cube.toString() << std::endl;
 }
 
