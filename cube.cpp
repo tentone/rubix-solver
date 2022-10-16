@@ -49,42 +49,12 @@ struct CubeFace {
 	static const int L = 3; // Left (Green)
 	static const int U = 4; // Up (Orange)
 	static const int D = 5; // Down (Red)
-
-	static std::map<int, std::string> _names()
-	{
-		std::map<int, std::string> m = {
-			{0, "Front"},
-			{1, "Right"},
-			{2, "Back"},
-			{3, "Left"},
-			{4, "Up"},
-			{5, "Down"}
-		};
-		return m;
-	}
-
-	static std::map<int, std::string> names;
-
-	static std::map<int, std::string> _colors()
-	{
-		std::map<int, std::string> m = {
-			{0, "W"},
-			{1, "B"},
-			{2, "Y"},
-			{3, "G"},
-			{4, "O"},
-			{5, "R"}
-		};
-		return m;
-	}
-
-	static std::map<int, std::string> colors;
-
 };
 
-std::map<int, std::string> CubeFace::names = CubeFace::_names();
+const std::string CubeFaceNames[] = { "Front", "Right", "Back", "Left", "Up", "Down" };
 
-std::map<int, std::string> CubeFace::colors = CubeFace::_colors();
+const std::string CubeFaceColors[] = {"W", "B", "Y", "G", "O", "R"};
+
 
 class Cube {
 public: 
@@ -357,10 +327,10 @@ public:
 		std::string out = "";
 		
 		for (int f = 0; f < 6; f++) {
-			out += "F" + std::to_string(f) + "\n[";
+			out += CubeFaceNames[f] + "\n[";
 			for (int s = 0; s < 9; s++) {
 		
-				out += std::to_string(this->cube[f][s]);
+				out += CubeFaceColors[this->cube[f][s]];
 
 				if (s < 8) {
 					out += ", ";

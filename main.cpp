@@ -2,39 +2,37 @@
 
 #include <iostream>
 
-#include "cube.cpp"
 #include "solver.cpp"
 #include "test.cpp"
+#include "cube.cpp"
 
 int main()
 {
     Test::test();
-
+    
     Cube cube = Cube();
-    
-    cube.move(CubeMove::U, CubeMoveDirection::CW);
-    cube.move(CubeMove::M, CubeMoveDirection::CW);
-    cube.move(CubeMove::D, CubeMoveDirection::CW);
-    
-    cube.move(CubeMove::D, CubeMoveDirection::CCW);
-    cube.move(CubeMove::M, CubeMoveDirection::CCW);
-    cube.move(CubeMove::U, CubeMoveDirection::CCW);
+    cube.move(CubeMove::F, CubeMoveDirection::CW);
+    cube.move(CubeMove::F, CubeMoveDirection::CW);
+    cube.scramble();
+    std::cout << cube.toString() << std::endl;
 
-    // NOK
+
+    //bool sol = CubeSolver::solveBF(cube);
+    //std::cout << sol << std::endl;
+
+    //// NOK
     //cube.move(CubeMove::D, CubeMoveDirection::CW);
 
-    // NOK L
+    // //NOK L
     // cube.move(CubeMove::L, CubeMoveDirection::CW);
 
-    //cube.move(CubeMove::F, CubeMoveDirection::CW);
-    //cube.move(CubeMove::F, CubeMoveDirection::CW);
 
 
-    // cube.scramble();
 
-    // bool sol = CubeSolver::solveBF(cube);
-    // std::cout << sol << std::endl;
+    // 
 
-    std::cout << cube.toString() << std::endl;
+  
+
+    // 
 }
 
