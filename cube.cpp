@@ -50,7 +50,7 @@ struct CubeFace {
 	static const int U = 4; // Up (Orange)
 	static const int D = 5; // Down (Red)
 
-	static std::map<int, std::string> create_names()
+	static std::map<int, std::string> _names()
 	{
 		std::map<int, std::string> m = {
 			{0, "Front"},
@@ -65,17 +65,26 @@ struct CubeFace {
 
 	static std::map<int, std::string> names;
 
-	//static const std::map<int, std::string> color = {
-	//	{0, "W"},
-	//	{1, "B"},
-	//	{2, "Y"},
-	//	{3, "G"},
-	//	{4, "O"},
-	//	{5, "R"}
-	//};
+	static std::map<int, std::string> _colors()
+	{
+		std::map<int, std::string> m = {
+			{0, "W"},
+			{1, "B"},
+			{2, "Y"},
+			{3, "G"},
+			{4, "O"},
+			{5, "R"}
+		};
+		return m;
+	}
+
+	static std::map<int, std::string> colors;
 
 };
 
+std::map<int, std::string> CubeFace::names = CubeFace::_names();
+
+std::map<int, std::string> CubeFace::colors = CubeFace::_colors();
 
 class Cube {
 public: 
