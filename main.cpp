@@ -10,33 +10,28 @@ int main()
 {
     Test::test();
     
+
+    CubeStep steps[] = {
+        CubeStep(CubeMove::F, CubeMoveDirection::CW),
+        CubeStep(CubeMove::U, CubeMoveDirection::CW),
+        CubeStep(CubeMove::U, CubeMoveDirection::CCW),
+        CubeStep(CubeMove::M, CubeMoveDirection::CW),
+        CubeStep(CubeMove::B, CubeMoveDirection::CW),
+        CubeStep(CubeMove::F, CubeMoveDirection::CCW),
+
+    };
+
+
     Cube cube = Cube();
-    cube.move(CubeMove::F, CubeMoveDirection::CW);
-    cube.move(CubeMove::U, CubeMoveDirection::CW);
 
-    //cube.move(CubeMove::M, CubeMoveDirection::CW);
-    //cube.move(CubeMove::B, CubeMoveDirection::CW);
-    //cube.move(CubeMove::F, CubeMoveDirection::CW);
-    // cube.scramble();
-    std::cout << cube.toString() << std::endl;
+    for (int i = 0; i < sizeof(steps); i++) {
 
+        cube.move(steps[i].move, steps[i].direction);
+        
+        std::cout << "----------------------\n" << cube.toString() << std::endl;
+    }
 
     //bool sol = CubeSolver::solveBF(cube);
     //std::cout << sol << std::endl;
-
-    //// NOK
-    //cube.move(CubeMove::D, CubeMoveDirection::CW);
-
-    // //NOK L
-    // cube.move(CubeMove::L, CubeMoveDirection::CW);
-
-
-
-
-    // 
-
-  
-
-    // 
 }
 

@@ -15,6 +15,11 @@
 struct CubeStep {
 	int move;
 	int direction;
+
+	CubeStep(int move, int direction) {
+		this->move = move;
+		this->direction = direction;
+	}
 };
 
 /**
@@ -45,9 +50,7 @@ public:
 		for (int m = 0; m < 9; m++) {
 			// CCW / CW
 			for (int d = 0; d < 2; d++) {
-				CubeStep step;
-				step.direction = d;
-				step.move = m;
+				CubeStep step = CubeStep(m, d);
 				solution.push_back(step);
 
 				std::list<CubeStep> sol(solution);

@@ -196,7 +196,7 @@ public:
 			int idx[3] = { 0, 1, 2 };
 
 			this->rotateRow(CubeFace::F, CubeFace::L, CubeFace::B, CubeFace::R, idx, direction);
-			this->rotateFace(CubeFace::U, direction);;
+			this->rotateFace(CubeFace::U, direction);
 		}
 		// Down Face
 		else if (move == CubeMove::D) {
@@ -331,13 +331,14 @@ public:
 			for (int s = 0; s < 9; s++) {
 		
 				out += CubeFaceColors[this->cube[f][s]];
+				//out += std::to_string(this->cube[f][s]);
 
 				if (s < 8) {
 					out += ", ";
 				}
 
 				if ((s + 1) % 3 == 0 && s < 8) {
-					out += "\n";
+					out += "\n ";
 				}
 			}
 			out += "]\n";
