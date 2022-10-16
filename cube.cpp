@@ -232,10 +232,10 @@ public:
 		// Front face
 		else if (move == CubeMove::F) {
 			int idx[4][3] = {
-				{ 2, 5, 8 },
-				{ 8, 7, 6 },
-				{ 6, 3, 0 },
-				{ 0, 1, 2 }
+				{ 8, 5, 2 },
+				{ 6, 7, 8 },
+				{ 0, 3, 6 },
+				{ 2, 1, 0 }
 			};
 
 			this->rotateRow(CubeFace::L, CubeFace::U, CubeFace::R, CubeFace::D, idx[0], idx[1], idx[2], idx[3], direction);

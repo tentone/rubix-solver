@@ -12,8 +12,12 @@ int main()
     
     Cube cube = Cube();
     cube.move(CubeMove::F, CubeMoveDirection::CW);
-    cube.move(CubeMove::F, CubeMoveDirection::CW);
-    cube.scramble();
+    cube.move(CubeMove::U, CubeMoveDirection::CW);
+
+    //cube.move(CubeMove::M, CubeMoveDirection::CW);
+    //cube.move(CubeMove::B, CubeMoveDirection::CW);
+    //cube.move(CubeMove::F, CubeMoveDirection::CW);
+    // cube.scramble();
     std::cout << cube.toString() << std::endl;
 
 
