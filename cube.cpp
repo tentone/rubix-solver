@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <map>
 
 #include <cstdlib>
 #include <time.h>
@@ -14,8 +15,7 @@
  * 
  * Simplified without double movements or cube rotations.
  */
-class CubeMove {
-public:
+struct CubeMove {
 	static const int U = 0; // Up Face
 	static const int D = 1; // Down Face
 	static const int R = 2; // Right Face
@@ -32,8 +32,7 @@ public:
  * 
  * Can be clockwise or conuter-clockwise
  */
-class CubeMoveDirection {
-public:
+struct CubeMoveDirection {
 	static const int CW = 0; // Clock-Wise
 	static const int CCW = 1; // Counter Clock-Wise
 };
@@ -43,14 +42,38 @@ public:
  * 
  * Each face values is stored as array.
  */
-class CubeFace {
-public:
-	static const int F = 0; // Front
-	static const int R = 1; // Right
-	static const int B = 2; // Back
-	static const int L = 3; // Left
-	static const int U = 4; // Up
-	static const int D = 5; // Down
+struct CubeFace {
+	static const int F = 0; // Front (White)
+	static const int R = 1; // Right (Blue)
+	static const int B = 2; // Back (Yellow)
+	static const int L = 3; // Left (Green)
+	static const int U = 4; // Up (Orange)
+	static const int D = 5; // Down (Red)
+
+	static std::map<int, std::string> create_names()
+	{
+		std::map<int, std::string> m = {
+			{0, "Front"},
+			{1, "Right"},
+			{2, "Back"},
+			{3, "Left"},
+			{4, "Up"},
+			{5, "Down"}
+		};
+		return m;
+	}
+
+	static std::map<int, std::string> names;
+
+	//static const std::map<int, std::string> color = {
+	//	{0, "W"},
+	//	{1, "B"},
+	//	{2, "Y"},
+	//	{3, "G"},
+	//	{4, "O"},
+	//	{5, "R"}
+	//};
+
 };
 
 
