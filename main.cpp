@@ -18,7 +18,6 @@ int main()
         CubeStep(CubeMove::M, CubeMoveDirection::CW),
         CubeStep(CubeMove::B, CubeMoveDirection::CW),
         CubeStep(CubeMove::F, CubeMoveDirection::CCW),
-
     };
 
 
@@ -31,7 +30,7 @@ int main()
         std::cout << "----------------------\n" << cube.toString() << std::endl;
     }
 
-    //bool sol = CubeSolver::solveBF(cube);
-    //std::cout << sol << std::endl;
+    // bool sol = CubeSolver::solveBF(cube);
+    // std::cout << sol << std::endl;
 }
 
