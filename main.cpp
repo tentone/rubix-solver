@@ -22,13 +22,14 @@ int main()
 
 
     Cube cube = Cube();
+    cube.debug();
+    std::cout << "----------------------\n" << cube.toString() << std::endl;
+    //for (int i = 0; i < sizeof(steps); i++) {
 
-    for (int i = 0; i < sizeof(steps); i++) {
-
-        cube.move(steps[i].move, steps[i].direction);
-        
-        std::cout << "----------------------\n" << cube.toString() << std::endl;
-    }
+    //    cube.move(steps[i].move, steps[i].direction);
+    //    
+    //    std::cout << "----------------------\n" << cube.toString() << std::endl;
+    //}
 
     // bool sol = CubeSolver::solveBF(cube);
     // std::cout << sol << std::endl;

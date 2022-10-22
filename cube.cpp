@@ -79,6 +79,21 @@ public:
 	}
 
 	/**
+	 * Initialize the cube cells with test data.
+	 * 
+	 * Numbers all cells sequentially
+	 */
+	void debug() {
+		int i = 0;
+
+		for (int f = 0; f < 6; f++) {
+			for (int s = 0; s < 9; s++) {
+				this->cube[f][s] = i++;
+			}
+		}
+	}
+
+	/**
 	 * Copy constructor do duplicate cube values.
 	 */
 	Cube(const Cube& rhs) {
@@ -330,8 +345,8 @@ public:
 			out += CubeFaceNames[f] + "\n[";
 			for (int s = 0; s < 9; s++) {
 		
-				out += CubeFaceColors[this->cube[f][s]];
-				//out += std::to_string(this->cube[f][s]);
+				// out += CubeFaceColors[this->cube[f][s]];
+				out += std::to_string(this->cube[f][s]);
 
 				if (s < 8) {
 					out += ", ";

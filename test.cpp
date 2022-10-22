@@ -25,10 +25,22 @@ public:
     }
 
     /**
+     * Front move.
+     */
+    static bool moveF() {
+        Cube cube = Cube();
+        cube.debug();
+
+        return false;
+    }
+
+    /**
      * Run all tests defined here and print to console.
      */
     static void test()
     {
         std::cout << "Test Cube CW/CCW Moves: " << Test::movecwccw() << std::endl;
+
+        std::cout << "Test Cube Move F: " << Test::moveF() << std::endl;
     }
 };
