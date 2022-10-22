@@ -173,33 +173,35 @@ public:
 	 * The face is rotated around itself.
 	 */
 	void rotateFace(int face, int direction) {
-		int* cface = this->cube[face];
+		int *cface = this->cube[face];
 
+		int bface[9] = {cface[0], cface[1] , cface[2],
+		cface[3], cface[4] , cface[5], 
+		cface[6], cface[7] , cface[8]};
+
+	
 		if (direction == CubeMoveDirection::CW)
 		{
-			int a = cface[0];
-			cface[0] = cface[3];
-			cface[3] = cface[6];
-			cface[6] = cface[7];
-			cface[7] = cface[8];
-			cface[8] = cface[5];
-			cface[5] = cface[2];
-			cface[2] = cface[1];
-			cface[1] = a;
+			cface[0] = bface[6];
+			cface[1] = bface[3];
+			cface[2] = bface[0];
+			cface[3] = bface[7];
+			cface[5] = bface[1];
+			cface[6] = bface[8];
+			cface[7] = bface[5];
+			cface[8] = bface[2];
 		}
-		else
+		else if (direction == CubeMoveDirection::CCW)
 		{
-			int a = cface[0];
-			cface[0] = cface[1];
-			cface[1] = cface[2];
-			cface[2] = cface[5];
-			cface[5] = cface[8];
-			cface[8] = cface[7];
-			cface[7] = cface[6];
-			cface[6] = cface[3];
-			cface[3] = a;
+			cface[0] = bface[2];
+			cface[1] = bface[5];
+			cface[2] = bface[8];
+			cface[3] = bface[1];
+			cface[5] = bface[7];
+			cface[6] = bface[0];
+			cface[7] = bface[3];
+			cface[8] = bface[6];
 		}
-
 	}
 
 	/**

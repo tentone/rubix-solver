@@ -32,7 +32,10 @@ public:
         cube.debug();
         cube.move(CubeMove::F, CubeMoveDirection::CW);
 
-        std::cout << cube.toString() << std::endl;
+        int f[9] = { 6, 3, 0,
+                     7, 4, 1,
+                     8, 5, 2};
+
 
         return true;
     }
