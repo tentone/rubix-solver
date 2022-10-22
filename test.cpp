@@ -30,8 +30,11 @@ public:
     static bool moveF() {
         Cube cube = Cube();
         cube.debug();
+        cube.move(CubeMove::F, CubeMoveDirection::CW);
 
-        return false;
+        std::cout << cube.toString() << std::endl;
+
+        return true;
     }
 
     /**
