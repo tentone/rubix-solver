@@ -25,9 +25,9 @@ public:
     }
 
     /**
-     * Front move.
+     * Front move to test face rotation.
      */
-    static bool moveF() {
+    static bool rotateFace() {
         Cube cube = Cube();
         cube.debug();
         cube.move(CubeMove::F, CubeMoveDirection::CW);
@@ -36,6 +36,11 @@ public:
                      7, 4, 1,
                      8, 5, 2};
 
+        for (int i = 0; i < 9; i++) {
+            if (f[i] != cube.cube[CubeFace::F][i]) {
+                return false;
+            }
+        }
 
         return true;
     }
@@ -46,7 +51,6 @@ public:
     static void test()
     {
         std::cout << "Test Cube CW/CCW Moves: " << Test::movecwccw() << std::endl;
-
-        std::cout << "Test Cube Move F: " << Test::moveF() << std::endl;
+        std::cout << "Test Cube face rotation: " << Test::rotateFace() << std::endl;
     }
 };

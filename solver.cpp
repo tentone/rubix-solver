@@ -29,7 +29,6 @@ struct CubeStep {
  */
 class CubeSolver {
 public:
-
 	/**
 	 * Solve the cube with brute force method.
 	 * 
@@ -50,13 +49,13 @@ public:
 		for (int m = 0; m < 9; m++) {
 			// CCW / CW
 			for (int d = 0; d < 2; d++) {
-				CubeStep step = CubeStep(m, d);
-				solution.push_back(step);
+				/*CubeStep step = CubeStep(m, d);
+				solution.push_back(step);*/
 
-				std::list<CubeStep> sol(solution);
+				//std::list<CubeStep> sol(solution);
 
 				Cube c = Cube(cube);
-				c.move(m, d);
+				//c.move(m, d);
 		
 				if (solveBF(c, depth - 1, solution)) {
 					return true;
