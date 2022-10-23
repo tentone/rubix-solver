@@ -51,15 +51,18 @@ public:
 		for (int m = 0; m < 9; m++) {
 			// CCW / CW
 			for (int d = 0; d < 2; d++) {
+				// Add step to list
 				CubeStep step = CubeStep(m, d);
-				solution.push_back(step);
-
+				
+				// Clone solution list
 				std::list<CubeStep> sol(solution);
+				sol.push_back(step);
 
+				// Clone cube
 				Cube c = Cube(&cube);
 				c.move(m, d);
 		
-				bool solved = solveBF(cube, depth - 1, solution);
+				bool solved = solveBF(cube, depth - 1, sol);
 				if (solved) {
 					return true;
 				}

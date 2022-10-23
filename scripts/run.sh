@@ -1,12 +1,10 @@
 #!/bin/bash
 
-EXEC="../rubix-solver"
-
 cd ..
 
-rm "$EXEC"
+rm rubix-solver
 
 cmake .
 make -j4
 
-. "$EXEC"
+./rubix-solver
