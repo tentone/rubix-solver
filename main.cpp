@@ -8,22 +8,22 @@
 
 int main()
 {
-    // Test::test();
+	// Test::test();
 
-    Cube cube = Cube();
-    cube.debug();
-    cube.move(CubeMove::F, CubeMoveDirection::CW);
-    cube.move(CubeMove::U, CubeMoveDirection::CW);
-    cube.move(CubeMove::M, CubeMoveDirection::CW);
-    cube.move(CubeMove::R, CubeMoveDirection::CCW);
-    cube.move(CubeMove::M, CubeMoveDirection::CCW);
-    cube.move(CubeMove::D, CubeMoveDirection::CW);
+	Cube cube = Cube();
+	cube.debug();
+	cube.move(CubeMove::F, CubeMoveDirection::CW);
+	cube.move(CubeMove::U, CubeMoveDirection::CW);
+	cube.move(CubeMove::M, CubeMoveDirection::CW);
+	cube.move(CubeMove::R, CubeMoveDirection::CCW);
+	cube.move(CubeMove::M, CubeMoveDirection::CCW);
+	cube.move(CubeMove::D, CubeMoveDirection::CW);
 
-    std::cout << cube.toString() << std::endl;
+	// std::cout << cube.toString() << std::endl;
 
-   cube.scramble();
+	// cube.scramble();
    
-   bool sol = CubeSolver::solveBF(cube);
-   std::cout << sol << std::endl;
+	bool sol = CubeSolver::solveBF(cube);
+	std::cout << sol << std::endl;
 }
 

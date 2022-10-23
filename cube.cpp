@@ -96,10 +96,10 @@ public:
 	/**
 	 * Copy constructor do duplicate cube values.
 	 */
-	Cube(const Cube& rhs) {
+	Cube(const Cube *rhs) {
 		for (int f = 0; f < 6; f++) {
 			for (int s = 0; s < 9; s++) {
-				this->cube[f][s] = rhs.cube[f][s];
+				this->cube[f][s] = rhs->cube[f][s];
 			}
 		}
 	}

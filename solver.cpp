@@ -36,7 +36,9 @@ public:
 	 * 
 	 * If no solution is found for the cube, the code will trow an exception.
 	 */
-	static bool solveBF(Cube cube, int depth=1000, std::list<CubeStep> solution = {}) {
+	static bool solveBF(Cube cube, int depth=30, std::list<CubeStep> solution = {}) {
+		std::cout << depth << std::endl;
+
 		if (cube.solved()) {
 			return true;
 		}
@@ -49,15 +51,16 @@ public:
 		for (int m = 0; m < 9; m++) {
 			// CCW / CW
 			for (int d = 0; d < 2; d++) {
-				/*CubeStep step = CubeStep(m, d);
-				solution.push_back(step);*/
+				CubeStep step = CubeStep(m, d);
+				solution.push_back(step);
 
-				//std::list<CubeStep> sol(solution);
+				std::list<CubeStep> sol(solution);
 
-				Cube c = Cube(cube);
-				//c.move(m, d);
+				Cube c = Cube(&cube);
+				c.move(m, d);
 		
-				if (solveBF(c, depth - 1, solution)) {
+				bool solved = solveBF(cube, depth - 1, solution);
+				if (solved) {
 					return true;
 				}
 			}
