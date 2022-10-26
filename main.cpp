@@ -14,8 +14,8 @@ int main()
 	cube.move(CubeMove::U, CubeMoveDirection::CW);
 	cube.move(CubeMove::M, CubeMoveDirection::CW);
 	cube.move(CubeMove::R, CubeMoveDirection::CCW);
-	cube.move(CubeMove::M, CubeMoveDirection::CCW);
-	cube.move(CubeMove::D, CubeMoveDirection::CW);
+	// cube.move(CubeMove::M, CubeMoveDirection::CCW);
+	// cube.move(CubeMove::D, CubeMoveDirection::CW);
 
 	// std::cout << cube.toString() << std::endl;
 

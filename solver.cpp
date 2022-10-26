@@ -13,12 +13,41 @@
  * Cube solution step structure that contains the move and direction.
  */
 struct CubeStep {
+	/**
+	 * @brief Move to be applied to the cube
+	 */
 	int move;
+
+	/**
+	 * @brief Diretion of the move to apply.
+	 */
 	int direction;
 
 	CubeStep(int move, int direction) {
 		this->move = move;
 		this->direction = direction;
+	}
+};
+
+
+/**
+ * @brief 
+ */
+struct CubeSolution {
+	/**
+	 * @brief List with the steps that compose this solution.
+	 */
+	std::list<CubeStep> solution = {};
+
+	/**
+	 * @brief Flag to indicate if this composes a valid solution.
+	 */
+	bool solved = false;
+
+	CubeSolution() {}
+
+	CubeSolution(std::list<CubeStep> steps) {
+		this->solution = std::list<CubeStep>(steps);
 	}
 };
 
@@ -36,39 +65,36 @@ public:
 	 * 
 	 * If no solution is found for the cube, the code will trow an exception.
 	 */
-	static bool solveBF(Cube cube, int depth=30) { //, std::list<CubeStep> solution = {}) {
-		// if (cube.solved()) {
-		// 	return true;
-		// }
+	static bool solveBF(Cube cube, int depth=6, std::list<CubeStep> solution = {}) {
+		if (cube.solved()) {
+			return true;
+		}
 
 		if (depth <= 0) {
 			return false;
 		}
 
-
-		std::cout << depth << std::endl;
-
 		// All possible moves
-		// for (int m = 0; m < 9; m++) {
+		for (int m = 0; m < 9; m++) {
 			// CCW / CW
 			for (int d = 0; d < 2; d++) {
-				// // Add step to list
-				// CubeStep step = CubeStep(m, d);
+				// Add step to list
+				CubeStep step = CubeStep(m, d);
 				
-				// // Clone solution list
-				// std::list<CubeStep> sol(solution);
-				// sol.push_back(step);
+				// Clone solution list
+				std::list<CubeStep> sol(solution);
+				sol.push_back(step);
 
-				// // Clone cube
-				// Cube c = Cube(&cube);
-				// c.move(m, d);
+				// Clone cube
+				Cube c = Cube(&cube);
+				c.move(m, d);
 		
 				bool solved = CubeSolver::solveBF(cube, depth - 1);
 				if (solved) {
 					return true;
 				}
 			}
-		// }
+		}
 
 		return false;
 	}
