@@ -29,6 +29,15 @@ struct CubeStep {
 	}
 };
 
+/**
+ * @brief Auxiliary method to convert a boolean value to string.
+ * 
+ * @param b 
+ * @return const std::string 
+ */
+const std::string bool_cast(const bool b) {
+    return b ? "true" : "false";
+}
 
 /**
  * @brief 
@@ -48,6 +57,17 @@ struct CubeSolution {
 
 	CubeSolution(std::list<CubeStep> steps) {
 		this->steps = std::list<CubeStep>(steps);
+	}
+
+	std::string toString() {
+		std::string out = "Solved: " + bool_cast(solved) + "\n";
+
+		out += "Steps:\n";
+		for (std::list<CubeStep>::iterator s = this->steps.begin(); s != this->steps.end(); s++) {
+			out += "     " + CubeMoveNames[s->move] + " (" + CubeMoveDirectionNames[s->direction] + ")";
+		}
+
+		return out;
 	}
 };
 

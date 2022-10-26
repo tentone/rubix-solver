@@ -27,6 +27,8 @@ struct CubeMove {
 	static const int S = 8; // Middle Row (Z)
 };
 
+const std::string CubeMoveNames[] = {"U", "D", "R", "L", "F", "B", "M", "E", "S"};
+
 /**
  * Direction at wich the cube movements can be performed
  * 
@@ -36,6 +38,8 @@ struct CubeMoveDirection {
 	static const int CW = 0; // Clock-Wise
 	static const int CCW = 1; // Counter Clock-Wise
 };
+
+const std::string CubeMoveDirectionNames[] = { "CW", "CCW" };
 
 /**
  * Index of the faces in the cube bidimensional array.

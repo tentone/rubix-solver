@@ -12,8 +12,8 @@ int main()
 	cube.debug();
 	cube.move(CubeMove::F, CubeMoveDirection::CW);
 	cube.move(CubeMove::U, CubeMoveDirection::CW);
-	cube.move(CubeMove::M, CubeMoveDirection::CW);
-	cube.move(CubeMove::R, CubeMoveDirection::CCW);
+	// cube.move(CubeMove::M, CubeMoveDirection::CW);
+	// cube.move(CubeMove::R, CubeMoveDirection::CCW);
 	// cube.move(CubeMove::M, CubeMoveDirection::CCW);
 	// cube.move(CubeMove::D, CubeMoveDirection::CW);
 
@@ -21,7 +21,9 @@ int main()
 
 	// cube.scramble();
    
-	bool sol = CubeSolver::solveBF(cube);
-	std::cout << sol << std::endl;
+	CubeSolution sol = CubeSolver::solveBF(cube);
+	std::cout << sol.solved << std::endl;
+
+	
 }
 
