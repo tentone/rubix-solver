@@ -37,7 +37,7 @@ struct CubeSolution {
 	/**
 	 * @brief List with the steps that compose this solution.
 	 */
-	std::list<CubeStep> solution = {};
+	std::list<CubeStep> steps = {};
 
 	/**
 	 * @brief Flag to indicate if this composes a valid solution.
@@ -47,7 +47,7 @@ struct CubeSolution {
 	CubeSolution() {}
 
 	CubeSolution(std::list<CubeStep> steps) {
-		this->solution = std::list<CubeStep>(steps);
+		this->steps = std::list<CubeStep>(steps);
 	}
 };
 
@@ -65,13 +65,14 @@ public:
 	 * 
 	 * If no solution is found for the cube, the code will trow an exception.
 	 */
-	static bool solveBF(Cube cube, int depth=6, std::list<CubeStep> solution = {}) {
+	static CubeSolution solveBF(Cube cube, int depth=6, CubeSolution solution = CubeSolution()) {
 		if (cube.solved()) {
-			return true;
+			solution.solved = true;
+			return solution;
 		}
 
 		if (depth <= 0) {
-			return false;
+			return solution;
 		}
 
 		// All possible moves
@@ -82,20 +83,20 @@ public:
 				CubeStep step = CubeStep(m, d);
 				
 				// Clone solution list
-				std::list<CubeStep> sol(solution);
-				sol.push_back(step);
+				CubeSolution sol = CubeSolution(solution);
+				sol.steps.push_back(step);
 
 				// Clone cube
 				Cube c = Cube(&cube);
 				c.move(m, d);
 		
-				bool solved = CubeSolver::solveBF(cube, depth - 1);
-				if (solved) {
-					return true;
+				sol = CubeSolver::solveBF(cube, depth - 1, sol);
+				if (sol.solved) {
+					return sol;
 				}
 			}
 		}
 
-		return false;
+		return solution;
 	}
 };
