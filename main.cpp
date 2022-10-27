@@ -27,22 +27,21 @@ int main()
 	cv::waitKey(0);
 	cv::destroyWindow(window);
 
-	// Test::test();
+	Test::test();
 
 	Cube cube = Cube();
-	cube.debug();
 	cube.move(CubeMove::F, CubeMoveDirection::CW);
 	cube.move(CubeMove::U, CubeMoveDirection::CW);
-	// cube.move(CubeMove::M, CubeMoveDirection::CW);
-	// cube.move(CubeMove::R, CubeMoveDirection::CCW);
-	// cube.move(CubeMove::M, CubeMoveDirection::CCW);
-	// cube.move(CubeMove::D, CubeMoveDirection::CW);
+	cube.move(CubeMove::M, CubeMoveDirection::CW);
+	cube.move(CubeMove::R, CubeMoveDirection::CCW);
+	cube.move(CubeMove::M, CubeMoveDirection::CCW);
+	cube.move(CubeMove::D, CubeMoveDirection::CW);
 
 	// std::cout << cube.toString() << std::endl;
 
 	// cube.scramble();
    
-	CubeSolution sol = CubeSolver::solveBF(cube);
+	CubeSolution sol = CubeSolver::solveBF(cube, 10);
 	std::cout << sol.toString() << std::endl;
 
 	

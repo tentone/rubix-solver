@@ -59,7 +59,6 @@ const std::string CubeFaceNames[] = { "Front", "Right", "Back", "Left", "Up", "D
 
 const std::string CubeFaceColors[] = {"W", "B", "Y", "G", "O", "R"};
 
-
 class Cube {
 public: 
 	/**

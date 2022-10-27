@@ -64,7 +64,7 @@ struct CubeSolution {
 
 		out += "Steps:\n";
 		for (std::list<CubeStep>::iterator s = this->steps.begin(); s != this->steps.end(); s++) {
-			out += "     " + CubeMoveNames[s->move] + " (" + CubeMoveDirectionNames[s->direction] + ")";
+			out += "     " + CubeMoveNames[s->move] + " (" + CubeMoveDirectionNames[s->direction] + ")\n";
 		}
 
 		return out;
@@ -85,8 +85,9 @@ public:
 	 * 
 	 * If no solution is found for the cube, the code will trow an exception.
 	 */
-	static CubeSolution solveBF(Cube cube, int depth=6, CubeSolution solution = CubeSolution()) {
+	static CubeSolution solveBF(Cube cube, int depth=3, CubeSolution solution = CubeSolution()) {
 		if (cube.solved()) {
+
 			solution.solved = true;
 			return solution;
 		}
@@ -99,18 +100,15 @@ public:
 		for (int m = 0; m < 9; m++) {
 			// CCW / CW
 			for (int d = 0; d < 2; d++) {
-				// Add step to list
-				CubeStep step = CubeStep(m, d);
-				
-				// Clone solution list
+				// Clone solution and add step to list
 				CubeSolution sol = CubeSolution(solution);
-				sol.steps.push_back(step);
+				sol.steps.push_back(CubeStep(m, d));
 
-				// Clone cube
+				// Clone cube and apply move
 				Cube c = Cube(&cube);
 				c.move(m, d);
 		
-				sol = CubeSolver::solveBF(cube, depth - 1, sol);
+				sol = CubeSolver::solveBF(c, depth - 1, sol);
 				if (sol.solved) {
 					return sol;
 				}
