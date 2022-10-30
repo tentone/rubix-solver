@@ -1,31 +1,14 @@
 #include <iostream>
 
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
 
 #include "solver.cpp"
 #include "test.cpp"
 #include "cube.cpp"
+#include "vision.cpp"
 
 int main()
 {
-	// Read the image file
-	cv::Mat image = cv::imread("./readme/notation.png");
-
-	// Check for failure
-	if (image.empty()) 
-	{
-		std::cout << "Could not open or find the image" << std::endl;
-		return -1;
-	}
-	std::string window = "Rubix";
-	cv::namedWindow(window);
-
-	cv::imshow(window, image);
-
-	cv::waitKey(0);
-	cv::destroyWindow(window);
+	Vision::start();
 
 	Test::test();
 
