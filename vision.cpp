@@ -6,25 +6,45 @@
 
 class Vision {
     public:
+        /**
+         * @brief Start the vision module to detect cube.
+         */
         static void start() {
-            // Read the image file
-            cv::Mat image = cv::imread("./readme/notation.png");
-
-            // Check for failure
-            if (image.empty()) 
+            cv::VideoCapture cap("http://192.168.0.40:8080/video");
+            if (!cap.isOpened())
             {
-                std::cout << "Could not open or find the image" << std::endl;
+                std::cout << "Error accessing camera." << std::endl;
                 return;
             }
-            std::string window = "Rubix";
-            cv::namedWindow(window);
 
-            cv::imshow(window, image);
+            // Read the image file
+            cv::Mat image; // = cv::imread("./readme/notation.png");
 
-            cv::waitKey(0);
-            cv::destroyWindow(window);
+            while (true) {
+                // Capture image camera
+                cap >> image;
+
+                // Check for failure
+                if (image.empty()) 
+                {
+                    std::cout << "Could not open or find the image" << std::endl;
+                    return;
+                }
+                std::string window = "Rubix";
+                cv::namedWindow(window);
+
+                cv::imshow(window, image);
+
+                cv::waitKey(0);
+                cv::destroyWindow(window);
+
+                return;
+            }
         }
 
+        /**
+         * @brief Detect quadrilaters in the image.
+         */
         static void quads() {
             
         }
