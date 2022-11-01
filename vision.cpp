@@ -63,9 +63,9 @@ class Vision {
 					return;
 				}
 
-				// Convert to HLS
-				cv::Mat hls;
-				cv::cvtColor(image, hls, cv::COLOR_BGR2HLS);
+
+
+				// Filter image based on color
 
 				this->quads(image);
 
@@ -90,7 +90,6 @@ class Vision {
 			// Use Canny instead of threshold to catch squares with gradient shading
 			cv::Mat bw;
 			cv::Canny(gray, bw, 0, 50, 7);
-			// cv::dilate(bw, bw, cv::Mat(), cv::Point(-1, -1));
 
 			cv::imshow("Graw", gray);
 			cv::imshow("BW", bw);
@@ -128,11 +127,14 @@ class Vision {
 						continue;
 					}
 
-					// Length of all sides
+					// Length of all edges
 					std::vector<double> length;
 					for (int j = 1; j < 4; j++) {
 						length.push_back(cv::norm(approx[j] - approx[j - 1]));
 					}
+
+					// Similar sized edges
+					// TODO
 
 					// Get the cosines of all corners
 					std::vector<double> cos;
@@ -140,31 +142,34 @@ class Vision {
 						cos.push_back(angle(approx[j%4], approx[j-2], approx[j-1]));
 					}
 
-					// Sort ascending the cosine values
+					// Filter by the angle of the corners (should be close to 90 deg)
 					std::sort(cos.begin(), cos.end());
-
-					// Get the lowest and the highest cosine
 					double mincos = cos.front();
 					double maxcos = cos.back();
-
-					// Use the degrees obtained above and the number of vertices to determine the shape of the contour
-					if (mincos >= -0.1 && maxcos <= 0.4) {
-						cv::Scalar color = cv::Scalar(255, 255,255);
-
-						// Draw
-						cv::line(dst, approx[0], approx[1], color);
-						cv::line(dst, approx[1], approx[2], color);
-						cv::line(dst, approx[2], approx[3], color);
-						cv::line(dst, approx[3], approx[0], color);
+					if (mincos < -0.3 && maxcos > 0.3) {
+						continue;	
 					}
+
+					cv::Scalar color = cv::Scalar(255, 255,255);
+
+					// Draw
+					cv::line(dst, approx[0], approx[1], color);
+					cv::line(dst, approx[1], approx[2], color);
+					cv::line(dst, approx[2], approx[3], color);
+					cv::line(dst, approx[3], approx[0], color);
 				}
 			}
 
 			cv::imshow("Quads", dst);
 		}
 
-		void segmentColor() {
-
+		/**
+		 * Segment image based on rubix cube face colors.
+		 */
+		void segmentColor(cv::Mat src) {
+			// Convert to HLS
+			cv::Mat hls;
+			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);
 
 			// Yellow
 
