@@ -92,7 +92,7 @@ class Vision {
 			cv::Canny(gray, bw, 0, 50, 5);
 
 			// Find contours
-			std::vector<std::vector<cv::Point> > contours;
+			std::vector<std::vector<cv::Point>> contours;
 			cv::findContours(bw.clone(), contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
 			// Approximated points 
@@ -103,11 +103,13 @@ class Vision {
 
 			for (int i = 0; i < contours.size(); i++)
 			{
+				std::vector<cv::Point> contour = contours[i];
+
 				// Approximate contour with accuracy proportional to the contour perimeter
-				cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.02, true);
+				cv::approxPolyDP(cv::Mat(contour), approx, cv::arcLength(cv::Mat(contour), true) * 0.02, true);
 
 				// Skip small or non-convex objects 
-				if (std::fabs(cv::contourArea(contours[i])) < 200 || !cv::isContourConvex(approx)) {
+				if (std::fabs(cv::contourArea(contour)) < 100 || !cv::isContourConvex(approx)) {
 					continue;
 				}
 
@@ -128,8 +130,13 @@ class Vision {
 
 					// Use the degrees obtained above and the number of vertices to determine the shape of the contour
 					if (mincos >= -0.2 && maxcos <= 0.5) {
-						
-						// setLabel(dst, "RECT", contours[i]);
+						cv::Scalar color = cv::Scalar(255, 255,255);
+
+						// Draw
+						cv::line(dst, approx[0], approx[1], color);
+						cv::line(dst, approx[1], approx[2], color);
+						cv::line(dst, approx[2], approx[3], color);
+						cv::line(dst, approx[3], approx[0], color);
 					}
 				}
 			}
