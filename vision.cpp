@@ -89,14 +89,15 @@ class Vision {
 
 			// Use Canny instead of threshold to catch squares with gradient shading
 			cv::Mat bw;
-			cv::Canny(gray, bw, 0, 50, 5);
+			cv::Canny(gray, bw, 0, 50, 7);
+			// cv::dilate(bw, bw, cv::Mat(), cv::Point(-1, -1));
+
+			cv::imshow("Graw", gray);
+			cv::imshow("BW", bw);
 
 			// Find contours
 			std::vector<std::vector<cv::Point>> contours;
-			cv::findContours(bw.clone(), contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-			// Approximated points 
-			std::vector<cv::Point> approx;
+			cv::findContours(bw, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 
 			// Output matrix for debug
 			cv::Mat dst = src.clone();
@@ -105,19 +106,37 @@ class Vision {
 			{
 				std::vector<cv::Point> contour = contours[i];
 
-				// Approximate contour with accuracy proportional to the contour perimeter
-				cv::approxPolyDP(cv::Mat(contour), approx, cv::arcLength(cv::Mat(contour), true) * 0.02, true);
+				const int min_area = 200;
+				const int max_area = 100000000;
 
-				// Skip small or non-convex objects 
-				if (std::fabs(cv::contourArea(contour)) < 100 || !cv::isContourConvex(approx)) {
-					continue;
-				}
+				// Approximated points 
+				std::vector<cv::Point> approx;
+				
+				// Approximate contour with accuracy proportional to the contour perimeter
+				cv::approxPolyDP(contour, approx, cv::arcLength(contours[i], true) * 0.05, true);
 
 				if (approx.size() == 4)
 				{
+					// Skip objects by size
+					int area = cv::contourArea(approx);
+					if (area < min_area || area > max_area) {
+						continue;
+					}
+					
+					// Skip non-convex objects 
+					if (!cv::isContourConvex(approx)) {
+						continue;
+					}
+
+					// Length of all sides
+					std::vector<double> length;
+					for (int j = 1; j < 4; j++) {
+						length.push_back(cv::norm(approx[j] - approx[j - 1]));
+					}
+
 					// Get the cosines of all corners
 					std::vector<double> cos;
-					for (int j = 2; j < 5; j++) {
+					for (int j = 2; j <= 4; j++) {
 						cos.push_back(angle(approx[j%4], approx[j-2], approx[j-1]));
 					}
 
@@ -129,7 +148,7 @@ class Vision {
 					double maxcos = cos.back();
 
 					// Use the degrees obtained above and the number of vertices to determine the shape of the contour
-					if (mincos >= -0.2 && maxcos <= 0.5) {
+					if (mincos >= -0.1 && maxcos <= 0.4) {
 						cv::Scalar color = cv::Scalar(255, 255,255);
 
 						// Draw
