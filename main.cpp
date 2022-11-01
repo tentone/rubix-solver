@@ -8,11 +8,13 @@
 
 int main()
 {
-	Vision::start();
+	Vision vision = Vision();
+	vision.detect();
 
-	Test::test();
+	// Test::test();
 
 	Cube cube = Cube();
+	// cube.scramble();
 	cube.move(CubeMove::F, CubeMoveDirection::CW);
 	cube.move(CubeMove::U, CubeMoveDirection::CW);
 	cube.move(CubeMove::M, CubeMoveDirection::CW);
@@ -20,9 +22,7 @@ int main()
 	cube.move(CubeMove::M, CubeMoveDirection::CCW);
 	cube.move(CubeMove::D, CubeMoveDirection::CW);
 
-	// std::cout << cube.toString() << std::endl;
-
-	// cube.scramble();
+	std::cout << "Cube Read\n" << cube.toString() << std::endl;
    
 	CubeSolution sol = CubeSolver::solveBF(cube, 10);
 	std::cout << sol.toString() << std::endl;

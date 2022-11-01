@@ -1,51 +1,156 @@
+#pragma once
+
 #include <iostream>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+
+#include "config.cpp"
+#include "cube.cpp"
+
+/**
+ * Helper function to find a cosine of angle between vectors from pt0->pt1 and pt0->pt2
+ */
+static double angle(cv::Point pt1, cv::Point pt2, cv::Point pt0)
+{
+	double dx1 = pt1.x - pt0.x;
+	double dy1 = pt1.y - pt0.y;
+	double dx2 = pt2.x - pt0.x;
+	double dy2 = pt2.y - pt0.y;
+
+	return (dx1*dx2 + dy1*dy2)/sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
+}
 
 class Vision {
-    public:
-        /**
-         * @brief Start the vision module to detect cube.
-         */
-        static void start() {
-            cv::VideoCapture cap("http://192.168.0.40:8080/video");
-            if (!cap.isOpened())
-            {
-                std::cout << "Error accessing camera." << std::endl;
-                return;
-            }
+	public:
+		/**
+		 * Cube object to store result in.
+		 */
+		Cube cube;
 
-            // Read the image file
-            cv::Mat image; // = cv::imread("./readme/notation.png");
+		Vision() {
+			this->cube = Cube();
+		}
 
-            while (true) {
-                // Capture image camera
-                cap >> image;
+		/**
+		 * @brief Start the vision module to detect cube.
+		 */
+		void detect() {
+			cv::VideoCapture cap(CONFIG_CAMERA);
+			if (!cap.isOpened())
+			{
+				std::cout << "Error accessing camera." << std::endl;
+				return;
+			}
 
-                // Check for failure
-                if (image.empty()) 
-                {
-                    std::cout << "Could not open or find the image" << std::endl;
-                    return;
-                }
-                std::string window = "Rubix";
-                cv::namedWindow(window);
+			// Read the image file
+			cv::Mat image;
 
-                cv::imshow(window, image);
+			// Create window
+			std::string window = "Rubix";
+			cv::namedWindow(window);
 
-                cv::waitKey(0);
-                cv::destroyWindow(window);
+			while (true) {
+				// Capture image camera
+				cap >> image;
 
-                return;
-            }
-        }
+				// Check for failure
+				if (image.empty()) 
+				{
+					std::cout << "Could not open or find the image" << std::endl;
+					return;
+				}
 
-        /**
-         * @brief Detect quadrilaters in the image.
-         */
-        static void quads() {
-            
-        }
+				// Convert to HLS
+				cv::Mat hls;
+				cv::cvtColor(image, hls, cv::COLOR_BGR2HLS);
+
+				this->quads(image);
+
+				cv::imshow(window, image);
+				int key = cv::waitKey(1);
+				if (key == 27) {
+					break;
+				}
+			}
+
+			cv::destroyWindow(window);
+		}
+
+		/**
+		 * @brief Detect quadrilaters in the image.
+		 */
+		void quads(cv::Mat src) {
+			// Convert to grayscale
+			cv::Mat gray;
+			cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+
+			// Use Canny instead of threshold to catch squares with gradient shading
+			cv::Mat bw;
+			cv::Canny(gray, bw, 0, 50, 5);
+
+			// Find contours
+			std::vector<std::vector<cv::Point> > contours;
+			cv::findContours(bw.clone(), contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+			// Approximated points 
+			std::vector<cv::Point> approx;
+
+			// Output matrix for debug
+			cv::Mat dst = src.clone();
+
+			for (int i = 0; i < contours.size(); i++)
+			{
+				// Approximate contour with accuracy proportional to the contour perimeter
+				cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.02, true);
+
+				// Skip small or non-convex objects 
+				if (std::fabs(cv::contourArea(contours[i])) < 200 || !cv::isContourConvex(approx)) {
+					continue;
+				}
+
+				if (approx.size() == 4)
+				{
+					// Get the cosines of all corners
+					std::vector<double> cos;
+					for (int j = 2; j < 5; j++) {
+						cos.push_back(angle(approx[j%4], approx[j-2], approx[j-1]));
+					}
+
+					// Sort ascending the cosine values
+					std::sort(cos.begin(), cos.end());
+
+					// Get the lowest and the highest cosine
+					double mincos = cos.front();
+					double maxcos = cos.back();
+
+					// Use the degrees obtained above and the number of vertices to determine the shape of the contour
+					if (mincos >= -0.2 && maxcos <= 0.5) {
+						
+						// setLabel(dst, "RECT", contours[i]);
+					}
+				}
+			}
+
+			cv::imshow("Quads", dst);
+		}
+
+		void segmentColor() {
+
+
+			// Yellow
+
+			// Blue
+
+			// Red
+
+			// Orange
+
+			// Green
+
+			// White
+		}
+
 };
