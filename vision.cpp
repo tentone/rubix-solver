@@ -66,7 +66,9 @@ class Vision {
 
 
 				// Filter image based on color
+				this->segmentColor(image);
 
+				// Detect quads
 				this->quads(image);
 
 				cv::imshow(window, image);
@@ -172,6 +174,11 @@ class Vision {
 			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);
 
 			// Yellow
+			cv::Scalar y_min = cv::Scalar(100, 0, 0);
+			cv::Scalar y_max = cv::Scalar(130, 255, 255);
+
+			cv::Mat mask;
+			cv::inRange(hls, y_min, y_max, mask);
 
 			// Blue
 
@@ -182,6 +189,12 @@ class Vision {
 			// Green
 
 			// White
+
+			cv::Mat rgb;
+			src.copyTo(rgb, mask);
+			// cv::bitwise_and(src, src, rgb, mask);
+
+			cv::imshow("Filtered", rgb);
 		}
 
 };
