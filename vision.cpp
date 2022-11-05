@@ -169,6 +169,20 @@ class Vision {
 		 * Segment image based on rubix cube face colors.
 		 */
 		void segmentColor(cv::Mat src) {
+			cv::Scalar ranges[] = {
+				// White
+
+				// Blue
+
+				// Yellow
+
+				// Green
+
+				// Orange
+
+				// Red
+			};
+
 			// Convert to HLS
 			cv::Mat hls;
 			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);

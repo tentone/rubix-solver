@@ -1,10 +1,6 @@
 #!/bin/bash
 
+./build.sh
+
 cd ..
-
-rm rubix-solver
-
-cmake .
-make -j4
-
 ./rubix-solver
