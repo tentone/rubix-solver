@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include <opencv2/core.hpp>
+
 /**
  * Helper function to find a cosine of angle between vectors from pt0->pt1 and pt0->pt2
  */

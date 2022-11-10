@@ -11,26 +11,39 @@
 #include "cube.cpp"
 #include "utils.cpp"
 
-int h_max = 255;
-int h_min = 0;
-	void on_min( int val, void* ){
-		h_min = val;
-	}
 
-	void on_max( int val, void* ){
-		h_max = val;
-	}
+const cv::Scalar ranges[12] = {
+	// White
+	cv::Scalar(0, 0, 7),
+	cv::Scalar(255, 255, 35),
 
-void create_trackbar() {
+	// Blue
+	cv::Scalar(93, 0, 50),
+	cv::Scalar(112, 255, 255),
 
-	cv::namedWindow("Filtered");
-	cv::createTrackbar( "Min", "Filtered", &h_min, 255, on_min );
-	cv::createTrackbar( "Max", "Filtered", &h_max, 255, on_max );
-}
+	// Yellow
+	cv::Scalar(26, 0, 50),
+	cv::Scalar(40, 255, 255),
+
+	// Green
+	cv::Scalar(58, 0, 50),
+	cv::Scalar(72, 255, 255),
+
+	// Orange
+	cv::Scalar(0, 55, 50),
+	cv::Scalar(12, 80, 255),
+
+	// Red
+	cv::Scalar(0, 23, 50),
+	cv::Scalar(12, 55, 255),
+};
+
 
 
 class Vision {
 	public:
+
+
 		/**
 		 * Cube object to store result in.
 		 */
@@ -38,7 +51,6 @@ class Vision {
 
 		Vision() {
 			this->cube = Cube();
-			create_trackbar();
 		}
 
 		/**
@@ -75,7 +87,7 @@ class Vision {
 				this->segmentColor(image);
 
 				// Detect quads
-				// this->quads(image);
+				this->quads(image);
 
 				// cv::imshow(window, image);
 				int key = cv::waitKey(1);
@@ -168,7 +180,7 @@ class Vision {
 				}
 			}
 
-			// cv::imshow("Quads", dst);
+			cv::imshow("Quads", dst);
 		}
 
 
@@ -176,39 +188,16 @@ class Vision {
 		 * Segment image based on rubix cube face colors.
 		 */
 		void segmentColor(cv::Mat src) {
-			cv::Scalar ranges[] = {
-				// White
-				cv::Scalar(0, 0, 7),
-				cv::Scalar(255, 255, 35),
-
-				// Blue
-				cv::Scalar(93, 0, 50),
-				cv::Scalar(112, 255, 255),
-
-				// Yellow
-				cv::Scalar(26, 0, 50),
-				cv::Scalar(40, 255, 255),
-
-				// Green
-				cv::Scalar(58, 0, 50),
-				cv::Scalar(72, 255, 255),
-
-				// Orange
-				cv::Scalar(0, 55, 50),
-				cv::Scalar(12, 80, 255),
-
-				// Red
-				cv::Scalar(0, 23, 50),
-				cv::Scalar(12, 55, 255),
-			};
-
 			// Convert to HLS
 			cv::Mat hls;
 			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);
 
 			cv::Mat mask;
-			cv::inRange(hls, cv::Scalar(0, 0, h_min), cv::Scalar(255, 255, h_max), mask);
+			cv::inRange(hls, ranges[0], ranges[1], mask);
 
+			cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7), cv::Point(3, 3));
+			cv::dilate(mask, mask, element);
+			cv::erode(mask, mask, element);
 
 			// cv::bitwise_and(src, src, rgb, mask);
 
