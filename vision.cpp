@@ -9,21 +9,7 @@
 
 #include "config.cpp"
 #include "cube.cpp"
-
-/**
- * Helper function to find a cosine of angle between vectors from pt0->pt1 and pt0->pt2
- */
-static double angle(cv::Point pt1, cv::Point pt2, cv::Point pt0)
-{
-	double dx1 = pt1.x - pt0.x;
-	double dy1 = pt1.y - pt0.y;
-	double dx2 = pt2.x - pt0.x;
-	double dy2 = pt2.y - pt0.y;
-
-	return (dx1*dx2 + dy1*dy2)/sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
-}
-
-
+#include "utils.cpp"
 
 int h_max = 255;
 int h_min = 0;
@@ -192,28 +178,28 @@ class Vision {
 		void segmentColor(cv::Mat src) {
 			cv::Scalar ranges[] = {
 				// White
-				cv::Scalar(9, 0, 200),
-				cv::Scalar(22, 255, 255),
+				cv::Scalar(0, 0, 7),
+				cv::Scalar(255, 255, 35),
 
 				// Blue
-				cv::Scalar(93, 0, 0),
+				cv::Scalar(93, 0, 50),
 				cv::Scalar(112, 255, 255),
 
 				// Yellow
-				cv::Scalar(26, 0, 0),
+				cv::Scalar(26, 0, 50),
 				cv::Scalar(40, 255, 255),
 
 				// Green
-				cv::Scalar(58, 0, 0),
+				cv::Scalar(58, 0, 50),
 				cv::Scalar(72, 255, 255),
 
 				// Orange
-				cv::Scalar(0, 0, 0),
-				cv::Scalar(11, 255, 255),
+				cv::Scalar(0, 55, 50),
+				cv::Scalar(12, 80, 255),
 
 				// Red
-				cv::Scalar(0, 0, 0),
-				cv::Scalar(10, 255, 255),
+				cv::Scalar(0, 23, 50),
+				cv::Scalar(12, 55, 255),
 			};
 
 			// Convert to HLS
@@ -221,7 +207,7 @@ class Vision {
 			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);
 
 			cv::Mat mask;
-			cv::inRange(hls, cv::Scalar(h_min, 0, 0), cv::Scalar(h_max, 255, 255), mask);
+			cv::inRange(hls, cv::Scalar(0, 0, h_min), cv::Scalar(255, 255, h_max), mask);
 
 
 			// cv::bitwise_and(src, src, rgb, mask);
