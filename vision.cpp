@@ -23,6 +23,26 @@ static double angle(cv::Point pt1, cv::Point pt2, cv::Point pt0)
 	return (dx1*dx2 + dy1*dy2)/sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
 }
 
+
+
+int h_max = 255;
+int h_min = 0;
+	void on_min( int val, void* ){
+		h_min = val;
+	}
+
+	void on_max( int val, void* ){
+		h_max = val;
+	}
+
+void create_trackbar() {
+
+	cv::namedWindow("Filtered");
+	cv::createTrackbar( "Min", "Filtered", &h_min, 255, on_min );
+	cv::createTrackbar( "Max", "Filtered", &h_max, 255, on_max );
+}
+
+
 class Vision {
 	public:
 		/**
@@ -32,6 +52,7 @@ class Vision {
 
 		Vision() {
 			this->cube = Cube();
+			create_trackbar();
 		}
 
 		/**
@@ -64,14 +85,13 @@ class Vision {
 				}
 
 
-
 				// Filter image based on color
 				this->segmentColor(image);
 
 				// Detect quads
-				this->quads(image);
+				// this->quads(image);
 
-				cv::imshow(window, image);
+				// cv::imshow(window, image);
 				int key = cv::waitKey(1);
 				if (key == 27) {
 					break;
@@ -93,8 +113,8 @@ class Vision {
 			cv::Mat bw;
 			cv::Canny(gray, bw, 0, 50, 7);
 
-			cv::imshow("Graw", gray);
-			cv::imshow("BW", bw);
+			// cv::imshow("Gray", gray);
+			// cv::imshow("BW", bw);
 
 			// Find contours
 			std::vector<std::vector<cv::Point>> contours;
@@ -162,8 +182,9 @@ class Vision {
 				}
 			}
 
-			cv::imshow("Quads", dst);
+			// cv::imshow("Quads", dst);
 		}
+
 
 		/**
 		 * Segment image based on rubix cube face colors.
@@ -171,44 +192,46 @@ class Vision {
 		void segmentColor(cv::Mat src) {
 			cv::Scalar ranges[] = {
 				// White
+				cv::Scalar(9, 0, 200),
+				cv::Scalar(22, 255, 255),
 
 				// Blue
+				cv::Scalar(93, 0, 0),
+				cv::Scalar(112, 255, 255),
 
 				// Yellow
+				cv::Scalar(26, 0, 0),
+				cv::Scalar(40, 255, 255),
 
 				// Green
+				cv::Scalar(58, 0, 0),
+				cv::Scalar(72, 255, 255),
 
 				// Orange
+				cv::Scalar(0, 0, 0),
+				cv::Scalar(11, 255, 255),
 
 				// Red
+				cv::Scalar(0, 0, 0),
+				cv::Scalar(10, 255, 255),
 			};
 
 			// Convert to HLS
 			cv::Mat hls;
 			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);
 
-			// Yellow
-			cv::Scalar y_min = cv::Scalar(100, 0, 0);
-			cv::Scalar y_max = cv::Scalar(130, 255, 255);
-
 			cv::Mat mask;
-			cv::inRange(hls, y_min, y_max, mask);
+			cv::inRange(hls, cv::Scalar(h_min, 0, 0), cv::Scalar(h_max, 255, 255), mask);
 
-			// Blue
 
-			// Red
-
-			// Orange
-
-			// Green
-
-			// White
+			// cv::bitwise_and(src, src, rgb, mask);
 
 			cv::Mat rgb;
 			src.copyTo(rgb, mask);
-			// cv::bitwise_and(src, src, rgb, mask);
 
 			cv::imshow("Filtered", rgb);
+			
 		}
+
 
 };
