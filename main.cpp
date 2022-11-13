@@ -26,7 +26,5 @@ int main()
    
 	CubeSolution sol = CubeSolver::solveBF(cube, 10);
 	std::cout << sol.toString() << std::endl;
-
-	
 }
 

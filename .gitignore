@@ -44,3 +44,5 @@ CMakeCache.txt
 cmake_install.cmake
 
 rubix-solver
+
+build/

@@ -84,7 +84,7 @@ class Vision {
 
 
 				// Filter image based on color
-				this->segmentColor(image);
+				// this->segmentColor(image);
 
 				// Detect quads
 				this->quads(image);
@@ -102,7 +102,9 @@ class Vision {
 		/**
 		 * @brief Detect quadrilaters in the image.
 		 */
-		void quads(cv::Mat src) {
+		std::vector<std::vector<cv::Point>> quads(cv::Mat src) {
+			const bool debug = true;
+
 			// Convert to grayscale
 			cv::Mat gray;
 			cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
@@ -121,18 +123,21 @@ class Vision {
 			// Output matrix for debug
 			cv::Mat dst = src.clone();
 
+			// Quads detected
+			std::vector<std::vector<cv::Point>> quads;
+
 			for (int i = 0; i < contours.size(); i++)
 			{
 				std::vector<cv::Point> contour = contours[i];
 
-				const int min_area = 200;
-				const int max_area = 100000000;
+				const int min_area = 1000;
+				const int max_area = 5000;
 
 				// Approximated points 
 				std::vector<cv::Point> approx;
 				
 				// Approximate contour with accuracy proportional to the contour perimeter
-				cv::approxPolyDP(contour, approx, cv::arcLength(contours[i], true) * 0.05, true);
+				cv::approxPolyDP(contour, approx, cv::arcLength(contours[i], true) * 0.04, true);
 
 				if (approx.size() == 4)
 				{
@@ -170,17 +175,25 @@ class Vision {
 						continue;	
 					}
 
-					cv::Scalar color = cv::Scalar(255, 255,255);
+					// It is a valid quad add to the list~
+					quads.push_back(approx);
 
-					// Draw
-					cv::line(dst, approx[0], approx[1], color);
-					cv::line(dst, approx[1], approx[2], color);
-					cv::line(dst, approx[2], approx[3], color);
-					cv::line(dst, approx[3], approx[0], color);
+					// Draw Quad
+					if (debug) {
+						cv::Scalar color = cv::Scalar(255, 255,255);
+						cv::line(dst, approx[0], approx[1], color);
+						cv::line(dst, approx[1], approx[2], color);
+						cv::line(dst, approx[2], approx[3], color);
+						cv::line(dst, approx[3], approx[0], color);
+					}
 				}
 			}
 
-			cv::imshow("Quads", dst);
+			if (debug) {
+				cv::imshow("Quads", dst);
+			}
+
+			return quads;
 		}
 
 
@@ -188,6 +201,8 @@ class Vision {
 		 * Segment image based on rubix cube face colors.
 		 */
 		void segmentColor(cv::Mat src) {
+			const bool debug = true;
+
 			// Convert to HLS
 			cv::Mat hls;
 			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);
@@ -204,8 +219,9 @@ class Vision {
 			cv::Mat rgb;
 			src.copyTo(rgb, mask);
 
-			cv::imshow("Filtered", rgb);
-			
+			if (debug) {
+				cv::imshow("Filtered", rgb);
+			}
 		}
 
 
