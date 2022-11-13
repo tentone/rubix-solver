@@ -84,7 +84,7 @@ class Vision {
 
 
 				// Filter image based on color
-				// this->segmentColor(image);
+				this->segmentColor(image);
 
 				// Detect quads
 				this->quads(image);
@@ -130,7 +130,7 @@ class Vision {
 			{
 				std::vector<cv::Point> contour = contours[i];
 
-				const int min_area = 1000;
+				const int min_area = 2000;
 				const int max_area = 5000;
 
 				// Approximated points 
@@ -158,8 +158,21 @@ class Vision {
 						length.push_back(cv::norm(approx[j] - approx[j - 1]));
 					}
 
-					// Similar sized edges
-					// TODO
+					// Similar sized edges (square)
+					const double max_diff = 100.0;
+					double max = 0.0;
+					for (int i = 0; i < 4; i++) {
+						for (int j = i; j < 4; j++) {
+							double diff = abs(length[j] - length[i]);
+							if (max < diff) {
+								max = diff;
+							}
+						}
+					}
+
+					if(max > max_diff) {
+						continue;
+					}
 
 					// Get the cosines of all corners
 					std::vector<double> cos;
@@ -208,7 +221,7 @@ class Vision {
 			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);
 
 			cv::Mat mask;
-			cv::inRange(hls, ranges[0], ranges[1], mask);
+			cv::inRange(hls, ranges[4], ranges[5], mask);
 
 			cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7), cv::Point(3, 3));
 			cv::dilate(mask, mask, element);
