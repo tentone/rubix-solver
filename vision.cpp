@@ -69,22 +69,22 @@ struct Quad {
 		}
 
 		center /= float(this->points.size());
+		
 		return center;
 	}
 
 };
 
 // Compares two intervals according to starting times.
-bool quad_sort(Quad a, Quad b)
-{
+bool quad_sort(Quad a, Quad b) {
 	cv::Point a_p = a.center();
 	cv::Point b_p = b.center();
 
-	if (a_p.y != b_p.y) {
-		return a_p.y > b_p.y;
+	if (abs(a_p.y - b_p.y) > 30.0) {
+		return a_p.y < b_p.y;
 	}
 
-    return a_p.x > b_p.x;
+    return a_p.x < b_p.x;
 }
 
 
@@ -130,7 +130,8 @@ class Vision {
 
 				// Detect quads
 				std::vector<Quad> quads = this->quads(image);
-				this->debug_quads(image, quads);
+
+	
 
 
 				// Figure which quad belongs to witch face
@@ -138,10 +139,14 @@ class Vision {
 					// Sort based on x, y positions
 					std::sort(quads.begin(), quads.end(), quad_sort);
 
+
+			this->debug_quads(image, quads);
+
 					// Check colors of each quad
 					for (int i = 0; i < quads.size(); i++)
 					{
 						Quad quad = quads[i];
+						
 						
 					}
 				}
@@ -186,6 +191,9 @@ class Vision {
 				cv::line(dst, quad[1], quad[2], colors[1]);
 				cv::line(dst, quad[2], quad[3], colors[2]);
 				cv::line(dst, quad[3], quad[0], colors[3]);
+
+				// Center index
+				cv::putText(dst, std::to_string(i), quads[i].center(), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
 			}
 
 			cv::imshow("Quads", dst);
