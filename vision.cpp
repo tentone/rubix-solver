@@ -39,11 +39,57 @@ const cv::Scalar ranges[12] = {
 };
 
 
+/**
+ * Represents a quad detected in the image. 
+ */
+struct Quad {
+	/**
+	 * List of points that compose the quad.
+	 * 
+	 * Must always be composed of four points
+	 */
+	std::vector<cv::Point> points;
+
+	/**
+	 * Color of the quad.
+	 * 
+	 * Based on the rubix cube color faces
+	 */
+	int color;
+
+	/**
+	 * Get the center of the quad.
+	 */
+	cv::Point center() {
+		cv::Point center = cv::Point(0.0, 0.0);
+
+		for (int i = 0; i < this->points.size(); i++)
+		{
+			center += this->points[i];
+		}
+
+		center /= float(this->points.size());
+		return center;
+	}
+
+};
+
+// Compares two intervals according to starting times.
+bool quad_sort(Quad a, Quad b)
+{
+	cv::Point a_p = a.center();
+	cv::Point b_p = b.center();
+
+	if (a_p.y != b_p.y) {
+		return a_p.y > b_p.y;
+	}
+
+    return a_p.x > b_p.x;
+}
+
 
 class Vision {
 	public:
-
-
 		/**
 		 * Cube object to store result in.
 		 */
@@ -83,15 +129,26 @@ class Vision {
 				}
 
 				// Detect quads
-				std::vector<std::vector<cv::Point>> quads = this->quads(image);
+				std::vector<Quad> quads = this->quads(image);
 				this->debug_quads(image, quads);
 
+
+				// Figure which quad belongs to witch face
+				if (quads.size() == 9) {
+					// Sort based on x, y positions
+					std::sort(quads.begin(), quads.end(), quad_sort);
+
+					// Check colors of each quad
+					for (int i = 0; i < quads.size(); i++)
+					{
+						Quad quad = quads[i];
+						
+					}
+				}
+
+
 				// Filter image based on color
-				this->segmentColor(image);
-
-
-				// Debug quads
-
+				this->segment_colors(image);
 
 				// cv::imshow(window, image);
 				int key = cv::waitKey(1);
@@ -103,19 +160,32 @@ class Vision {
 			cv::destroyWindow(window);
 		}
 
-		void debug_quads(cv::Mat src, std::vector<std::vector<cv::Point>> quads) {
+
+		/**
+		 * Method to debug the quads detected in the image.
+		 * 
+		 * Creates a mat with debug information and displays it to the screen.
+		 */
+		void debug_quads(cv::Mat src, std::vector<Quad> quads) {
 			cv::Mat dst = src.clone();
-			cv::Scalar color = cv::Scalar(255, 255,255);
+
+			cv::Scalar color = cv::Scalar(255, 255, 255);
+			cv::Scalar colors[] = {
+				cv::Scalar(255, 0, 0),
+				cv::Scalar(0, 255, 0),
+				cv::Scalar(0, 0, 255),
+				cv::Scalar(255, 255, 0)
+			};
 
 			for (int i = 0; i < quads.size(); i++)
 			{
-				std::vector<cv::Point> quad = quads[i];
+				std::vector<cv::Point> quad = quads[i].points;
 
 				// Draw Quad
-				cv::line(dst, quad[0], quad[1], color);
-				cv::line(dst, quad[1], quad[2], color);
-				cv::line(dst, quad[2], quad[3], color);
-				cv::line(dst, quad[3], quad[0], color);
+				cv::line(dst, quad[0], quad[1], colors[0]);
+				cv::line(dst, quad[1], quad[2], colors[1]);
+				cv::line(dst, quad[2], quad[3], colors[2]);
+				cv::line(dst, quad[3], quad[0], colors[3]);
 			}
 
 			cv::imshow("Quads", dst);
@@ -124,7 +194,7 @@ class Vision {
 		/**
 		 * @brief Detect quadrilaters in the image.
 		 */
-		std::vector<std::vector<cv::Point>> quads(cv::Mat src) {
+		std::vector<Quad> quads(cv::Mat src) {
 			// Convert to grayscale
 			cv::Mat gray;
 			cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
@@ -141,7 +211,7 @@ class Vision {
 			cv::findContours(bw, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 
 			// Quads detected
-			std::vector<std::vector<cv::Point>> quads;
+			std::vector<Quad> quads;
 
 			for (int i = 0; i < contours.size(); i++)
 			{
@@ -205,8 +275,11 @@ class Vision {
 						continue;	
 					}
 
+					Quad quad = Quad();
+					quad.points = approx;
+
 					// It is a valid quad add to the list~
-					quads.push_back(approx);
+					quads.push_back(quad);
 				}
 			}
 
@@ -217,7 +290,7 @@ class Vision {
 		/**
 		 * Segment image based on rubix cube face colors.
 		 */
-		void segmentColor(cv::Mat src) {
+		void segment_colors(cv::Mat src) {
 			const bool debug = true;
 
 			// Convert to HLS
