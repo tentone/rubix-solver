@@ -82,12 +82,16 @@ class Vision {
 					return;
 				}
 
+				// Detect quads
+				std::vector<std::vector<cv::Point>> quads = this->quads(image);
+				this->debug_quads(image, quads);
 
 				// Filter image based on color
 				this->segmentColor(image);
 
-				// Detect quads
-				this->quads(image);
+
+				// Debug quads
+
 
 				// cv::imshow(window, image);
 				int key = cv::waitKey(1);
@@ -99,12 +103,28 @@ class Vision {
 			cv::destroyWindow(window);
 		}
 
+		void debug_quads(cv::Mat src, std::vector<std::vector<cv::Point>> quads) {
+			cv::Mat dst = src.clone();
+			cv::Scalar color = cv::Scalar(255, 255,255);
+
+			for (int i = 0; i < quads.size(); i++)
+			{
+				std::vector<cv::Point> quad = quads[i];
+
+				// Draw Quad
+				cv::line(dst, quad[0], quad[1], color);
+				cv::line(dst, quad[1], quad[2], color);
+				cv::line(dst, quad[2], quad[3], color);
+				cv::line(dst, quad[3], quad[0], color);
+			}
+
+			cv::imshow("Quads", dst);
+		}
+
 		/**
 		 * @brief Detect quadrilaters in the image.
 		 */
 		std::vector<std::vector<cv::Point>> quads(cv::Mat src) {
-			const bool debug = true;
-
 			// Convert to grayscale
 			cv::Mat gray;
 			cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
@@ -119,9 +139,6 @@ class Vision {
 			// Find contours
 			std::vector<std::vector<cv::Point>> contours;
 			cv::findContours(bw, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
-
-			// Output matrix for debug
-			cv::Mat dst = src.clone();
 
 			// Quads detected
 			std::vector<std::vector<cv::Point>> quads;
@@ -190,20 +207,7 @@ class Vision {
 
 					// It is a valid quad add to the list~
 					quads.push_back(approx);
-
-					// Draw Quad
-					if (debug) {
-						cv::Scalar color = cv::Scalar(255, 255,255);
-						cv::line(dst, approx[0], approx[1], color);
-						cv::line(dst, approx[1], approx[2], color);
-						cv::line(dst, approx[2], approx[3], color);
-						cv::line(dst, approx[3], approx[0], color);
-					}
 				}
-			}
-
-			if (debug) {
-				cv::imshow("Quads", dst);
 			}
 
 			return quads;
