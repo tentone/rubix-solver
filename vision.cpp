@@ -32,12 +32,12 @@ const cv::Scalar ranges[12] = {
 	cv::Scalar(72, 255, 255),
 
 	// Orange
-	cv::Scalar(0, 55, 50),
-	cv::Scalar(12, 80, 255),
+	cv::Scalar(0, 75, 50),
+	cv::Scalar(12, 150, 255),
 
 	// Red
-	cv::Scalar(0, 23, 50),
-	cv::Scalar(12, 55, 255),
+	cv::Scalar(0, 0, 50),
+	cv::Scalar(12, 75, 255),
 };
 
 
@@ -57,7 +57,7 @@ struct Quad {
 	 * 
 	 * Based on the rubix cube color faces
 	 */
-	int color;
+	int color = 7;
 
 	/**
 	 * Get the center of the quad.
@@ -144,36 +144,50 @@ class Vision {
 					// Sort based on x, y positions
 					std::sort(quads.begin(), quads.end(), quad_sort);
 
-					// Debug the cube in action
-					this->debug_quads(image, quads);
-
 					// Check colors of each quad
 					for (int i = 0; i < quads.size(); i++)
 					{
 						Quad quad = quads[i];
 
-						// Create mask
-						cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, image.type());
-
+						// Create mask of the square
+						cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, CV_8U); // image.type());
 						std::vector<std::vector<cv::Point>> contours;
 						contours.push_back(quad.points);
 						cv::drawContours(mask, contours, 0, cv::Scalar(255, 255, 255), cv::FILLED);
 
 						// Mask draw
-						cv::imshow("Mask", mask);
+						// cv::imshow("Mask", mask);
 						
-						cv::Mat rgb;
-						image.copyTo(rgb, mask);
+						// Filter square using mask
+						cv::Mat square;
+						image.copyTo(square, mask);
 
-						cv::imshow("RGB Mask", rgb);
+						// Area of the square
+						int area_square = cv::countNonZero(mask);
+						
+						// Amount of area to accept the color
+						const float threshold_color = 0.8;
 
-	
+						for (int j = 0; j < 6; j++) {
+							cv::Mat filter = this->segment_colors(square, ranges[j * 2], ranges[j * 2 + 1]);
+							int area_filter = cv::countNonZero(filter);
+
+							float ratio = float(area_filter) / float(area_square);
+
+							// Accept color
+							if (ratio > threshold_color) {
+								quads[i].color = j;
+								break;
+							}
+						}
 					}
+
+					// Debug the cube in action
+					this->debug_quads(image, quads);
 				}
 
-
 				// Filter image based on color
-				this->segment_colors(image, ranges[6], ranges[7]);
+				this->segment_colors(image, ranges[10], ranges[11]);
 
 				// cv::imshow(window, image);
 				int key = cv::waitKey(1);
@@ -212,8 +226,11 @@ class Vision {
 				cv::line(dst, quad[2], quad[3], colors[2]);
 				cv::line(dst, quad[3], quad[0], colors[3]);
 
-				// Center index
+				// Index
 				cv::putText(dst, std::to_string(i), quads[i].center(), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+
+				// Color
+				cv::putText(dst, CubeFaceColors[quads[i].color], quad[0], cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
 			}
 
 			cv::imshow("Quads", dst);
@@ -230,9 +247,6 @@ class Vision {
 			// Use Canny instead of threshold to catch squares with gradient shading
 			cv::Mat bw;
 			cv::Canny(gray, bw, 0, 50, 7);
-
-			// cv::imshow("Gray", gray);
-			// cv::imshow("BW", bw);
 
 			// Find contours
 			std::vector<std::vector<cv::Point>> contours;
@@ -321,6 +335,9 @@ class Vision {
 		cv::Mat segment_colors(cv::Mat src, cv::Scalar min, cv::Scalar max) {
 			const bool debug = true;
 
+			// Indicate if the close operation should be applied
+			const bool close_op = false;
+
 			// Convert to HLS
 			cv::Mat hls;
 			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);
@@ -328,9 +345,12 @@ class Vision {
 			cv::Mat mask;
 			cv::inRange(hls, min, max, mask);
 
-			cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(9, 9), cv::Point(4, 4));
-			cv::erode(mask, mask, element);
-			cv::dilate(mask, mask, element);
+			if (close_op) {
+				cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7), cv::Point(3, 3));
+				cv::dilate(mask, mask, element);
+				cv::erode(mask, mask, element);
+			}
+	
 
 			if (debug) {
 				cv::Mat rgb;
@@ -340,6 +360,4 @@ class Vision {
 
 			return mask;
 		}
-
-
 };

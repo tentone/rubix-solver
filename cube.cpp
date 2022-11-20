@@ -57,7 +57,7 @@ struct CubeFace {
 
 const std::string CubeFaceNames[] = { "Front", "Right", "Back", "Left", "Up", "Down" };
 
-const std::string CubeFaceColors[] = {"W", "B", "Y", "G", "O", "R"};
+const std::string CubeFaceColors[] = {"W", "B", "Y", "G", "O", "R", "UNK"};
 
 class Cube {
 public: 
