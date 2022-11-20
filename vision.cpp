@@ -153,22 +153,27 @@ class Vision {
 						Quad quad = quads[i];
 
 						// Create mask
-						cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, CV_8U);
+						cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, image.type());
 
 						std::vector<std::vector<cv::Point>> contours;
 						contours.push_back(quad.points);
 						cv::drawContours(mask, contours, 0, cv::Scalar(255, 255, 255), cv::FILLED);
 
 						// Mask draw
-						cv::imshow("derp", mask);
+						cv::imshow("Mask", mask);
 						
-						// cv::Mat data = 
+						cv::Mat rgb;
+						image.copyTo(rgb, mask);
+
+						cv::imshow("RGB Mask", rgb);
+
+	
 					}
 				}
 
 
 				// Filter image based on color
-				this->segment_colors(image, ranges[0], ranges[1]);
+				this->segment_colors(image, ranges[6], ranges[7]);
 
 				// cv::imshow(window, image);
 				int key = cv::waitKey(1);
