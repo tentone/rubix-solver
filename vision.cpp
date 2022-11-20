@@ -11,7 +11,9 @@
 #include "cube.cpp"
 #include "utils.cpp"
 
-
+/**
+ * Color ranges in HSV used for filtering the color of the cube faces.
+ */
 const cv::Scalar ranges[12] = {
 	// White
 	cv::Scalar(0, 0, 7),
@@ -75,12 +77,18 @@ struct Quad {
 
 };
 
-// Compares two intervals according to starting times.
+/**
+ * Compares quads based on their position.
+ * 
+ * Used to sort quads by their coordinates from top to bottom, left to right.
+ */
 bool quad_sort(Quad a, Quad b) {
+	const float tolerance = 30.0;
+
 	cv::Point a_p = a.center();
 	cv::Point b_p = b.center();
 
-	if (abs(a_p.y - b_p.y) > 30.0) {
+	if (abs(a_p.y - b_p.y) > tolerance) {
 		return a_p.y < b_p.y;
 	}
 
@@ -131,29 +139,36 @@ class Vision {
 				// Detect quads
 				std::vector<Quad> quads = this->quads(image);
 
-	
-
-
 				// Figure which quad belongs to witch face
 				if (quads.size() == 9) {
 					// Sort based on x, y positions
 					std::sort(quads.begin(), quads.end(), quad_sort);
 
-
-			this->debug_quads(image, quads);
+					// Debug the cube in action
+					this->debug_quads(image, quads);
 
 					// Check colors of each quad
 					for (int i = 0; i < quads.size(); i++)
 					{
 						Quad quad = quads[i];
+
+						// Create mask
+						cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, CV_8U);
+
+						std::vector<std::vector<cv::Point>> contours;
+						contours.push_back(quad.points);
+						cv::drawContours(mask, contours, 0, cv::Scalar(255, 255, 255), cv::FILLED);
+
+						// Mask draw
+						cv::imshow("derp", mask);
 						
-						
+						// cv::Mat data = 
 					}
 				}
 
 
 				// Filter image based on color
-				this->segment_colors(image);
+				this->segment_colors(image, ranges[0], ranges[1]);
 
 				// cv::imshow(window, image);
 				int key = cv::waitKey(1);
@@ -298,7 +313,7 @@ class Vision {
 		/**
 		 * Segment image based on rubix cube face colors.
 		 */
-		void segment_colors(cv::Mat src) {
+		cv::Mat segment_colors(cv::Mat src, cv::Scalar min, cv::Scalar max) {
 			const bool debug = true;
 
 			// Convert to HLS
@@ -306,20 +321,19 @@ class Vision {
 			cv::cvtColor(src, hls, cv::COLOR_BGR2HLS);
 
 			cv::Mat mask;
-			cv::inRange(hls, ranges[4], ranges[5], mask);
+			cv::inRange(hls, min, max, mask);
 
-			cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7), cv::Point(3, 3));
-			cv::dilate(mask, mask, element);
+			cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(9, 9), cv::Point(4, 4));
 			cv::erode(mask, mask, element);
-
-			// cv::bitwise_and(src, src, rgb, mask);
-
-			cv::Mat rgb;
-			src.copyTo(rgb, mask);
+			cv::dilate(mask, mask, element);
 
 			if (debug) {
+				cv::Mat rgb;
+				src.copyTo(rgb, mask);
 				cv::imshow("Filtered", rgb);
 			}
+
+			return mask;
 		}
 
 
