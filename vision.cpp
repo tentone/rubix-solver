@@ -182,6 +182,22 @@ class Vision {
 						}
 					}
 
+					// Check if the color of all cells was detected
+					bool complete = true;
+					for (int j = 0; j < 9; j++) {
+						if (quads[j].color == 7) {
+							complete = false;
+						}
+					}
+
+					// Fill information of the cube face
+					if (complete) {
+						// Center color define the face to fill info
+						int face = quads[4].color;
+
+						// TODO <ADD CODE HERE>
+					}
+
 					// Debug the cube in action
 					this->debug_quads(image, quads);
 				}
