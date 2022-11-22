@@ -102,6 +102,16 @@ enum State {
 	SOLVE
 };
 
+cv::Scalar CubeColors[] = {
+	cv::Scalar(255, 255, 255), // W
+	cv::Scalar(255, 0, 0), // B
+	cv::Scalar(0, 255, 255), // Y
+	cv::Scalar(0, 255, 0), // G
+	cv::Scalar(0, 140, 230), // O
+	cv::Scalar(0, 0, 255), // R
+	cv::Scalar(0, 0, 0)
+};
+
 
 class Vision {
 	public:
@@ -163,7 +173,7 @@ class Vision {
 						Quad quad = quads[i];
 
 						// Create mask of the square
-						cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, CV_8U); // image.type());
+						cv::Mat mask = cv::Mat::zeros(image.rows, image.cols, CV_8U);
 						std::vector<std::vector<cv::Point>> contours;
 						contours.push_back(quad.points);
 						cv::drawContours(mask, contours, 0, cv::Scalar(255, 255, 255), cv::FILLED);
@@ -179,7 +189,7 @@ class Vision {
 						int area_square = cv::countNonZero(mask);
 						
 						// Amount of area to accept the color
-						const float threshold_color = 0.8;
+						const float area_threshold = 0.6;
 
 						for (int j = 0; j < 6; j++) {
 							cv::Mat filter = this->segment_colors(square, ranges[j * 2], ranges[j * 2 + 1]);
@@ -188,7 +198,7 @@ class Vision {
 							float ratio = float(area_filter) / float(area_square);
 
 							// Accept color
-							if (ratio > threshold_color) {
+							if (ratio > area_threshold) {
 								quads[i].color = j;
 								break;
 							}
@@ -225,9 +235,22 @@ class Vision {
 				// Display image
 				cv::imshow(window, image);
 				int key = cv::waitKey(1);
-				if (key == 27) {
+
+				// S
+				if (key == 115) {
+					CubeSolution sol = CubeSolver::solveBF(cube, 5);
+					std::cout << sol.toString() << std::endl;
+				}
+				// I
+				else if (key == 105) {
+
+				}
+				// ESC
+				else if (key == 27) {
 					break;
 				}
+
+				std::cout << key << std::endl;
 			}
 
 			cv::destroyWindow(window);
@@ -249,25 +272,33 @@ class Vision {
 		 * Draw the cube into the mat.
 		 */
 		void draw_cube(cv::Mat src) {
-			cv::Scalar colors[] = {
-				cv::Scalar(255, 255, 255), // W
-				cv::Scalar(255, 0, 0), // B
-				cv::Scalar(0, 255, 255), // Y
-				cv::Scalar(0, 0, 255), // G
-				cv::Scalar(0, 255, 120), // O
-				cv::Scalar(0, 255, 0), // R
-				cv::Scalar(0, 0, 0)
-			};
-			
+			int size = 30;
+			int space = size * 3;
+			int x = 130;
+			int y = 100;
+
+			draw_cube_face(src, x, y, 4, size);
+			draw_cube_face(src, x, y + space, 0, size);
+			draw_cube_face(src, x, y + space * 2, 5, size);
+			draw_cube_face(src, x, y + space * 3, 2, size);
+
+			draw_cube_face(src, x - space, y + space, 1, size);
+			draw_cube_face(src, x + space, y + space, 3, size);
+		}
+	
+		/**
+		 * Draw the cube face into the matrix
+		 */
+		void draw_cube_face(cv::Mat src, int off_x, int off_y, int idx, int s = 20) {
 			
 			for (int i = 0; i < 9; i++) {
 				int x = i % 3;
-				int y = i / 3;
-				int s = 20;
-				cv::Point2i offset = cv::Point2i(100, 100);
+				int y = (i / 3);
 
-				cv::Scalar color = colors[this->cube.cube[0][i]];
-				cv::rectangle(src, cv::Rect(x * s + offset.x, y * s + offset.y, s, s), color, 1); //cv::FILLED);
+				cv::Point2i offset = cv::Point2i(off_x, off_y);
+
+				cv::Scalar color = CubeColors[this->cube.cube[idx][i]];
+				cv::rectangle(src, cv::Rect(x * s + offset.x, y * s + offset.y, s, s), color, -1);
 				
 			}
 		}
