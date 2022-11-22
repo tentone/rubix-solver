@@ -157,7 +157,7 @@ class Vision {
 			cv::Mat image;
 
 			// Create window
-			std::string window = "Rubix";
+			std::string window = CONFIG_WINDOW;
 			cv::namedWindow(window);
 
 			while (true) {
@@ -201,7 +201,7 @@ class Vision {
 						int area_square = cv::countNonZero(mask);
 						
 						// Amount of area to accept the color
-						const float area_threshold = 0.6;
+						const float area_threshold = CONFIG_AREA_THRESHOLD;
 
 						for (int j = 0; j < 6; j++) {
 							cv::Mat filter = this->segment_colors(square, ranges[j * 2], ranges[j * 2 + 1]);
@@ -384,14 +384,14 @@ class Vision {
 			{
 				std::vector<cv::Point> contour = contours[i];
 
-				const int min_area = 2000;
-				const int max_area = 5000;
+				const int min_area = CONFIG_MIN_AREA;
+				const int max_area = CONFIG_MAX_AREA;
 
 				// Approximated points 
 				std::vector<cv::Point> approx;
 				
 				// Approximate contour with accuracy proportional to the contour perimeter
-				cv::approxPolyDP(contour, approx, cv::arcLength(contours[i], true) * 0.04, true);
+				cv::approxPolyDP(contour, approx, cv::arcLength(contours[i], true) * CONFIG_APPROX_TOL, true);
 
 				if (approx.size() == 4)
 				{
@@ -413,7 +413,7 @@ class Vision {
 					}
 
 					// Similar sized edges (square)
-					const double max_diff = 100.0;
+					const double max_diff = CONFIG_EDGE_DIFF;
 					double max = 0.0;
 					for (int i = 0; i < 4; i++) {
 						for (int j = i; j < 4; j++) {
@@ -438,7 +438,7 @@ class Vision {
 					std::sort(cos.begin(), cos.end());
 					double mincos = cos.front();
 					double maxcos = cos.back();
-					if (mincos < -0.3 && maxcos > 0.3) {
+					if (mincos < CONFIG_MIN_COSINE && maxcos > CONFIG_MAX_COSINE) {
 						continue;	
 					}
 
@@ -461,7 +461,7 @@ class Vision {
 			const bool debug = false;
 
 			// Indicate if the close operation should be applied
-			const bool close_op = false;
+			const bool close_op = CONFIG_SEGMENT_CLOSE;
 
 			// Convert to HLS
 			cv::Mat hls;
