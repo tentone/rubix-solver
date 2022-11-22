@@ -133,7 +133,7 @@ class Vision {
 		/**
 		 * Number of iteration used to solve the cube.
 		 */
-		int iterations = 10;
+		int iterations = 5;
 
 		Vision() {
 			this->cube = Cube();

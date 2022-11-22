@@ -4,6 +4,7 @@
 
 ## Setup
  - Install [OpenCV](https://github.com/opencv/opencv) from github (pre-built binary or from souce).
+    - Can use the `install.sh` script available on the repository
 
 ## Algorithm
  - TODO
