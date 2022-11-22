@@ -23,9 +23,12 @@
 
 
 ## Solve Algorithm
- - The algorithm used to solve the rubix cube in the system uses a brute-force approach.
+ - The original 3x3x3 Rubik's cube has 43.252.003.274.489.856.000 possible combinations.
+ - Theoritically a rubik's cube can be solved in 20 moved from any position.
+ - The algorithm implemented to solve the rubix cube in the system uses a brute-force approach.
     - Some optimizations are performed to remove ambigous movements.
  - The depth of moves is limited by performance of the algorithm.
+    - The max depth of moves can be changed in the GUI. By default 10 is used.
  - An alternative algorithms such as the [Thisletwaite's algorithm](https://github.com/conanwu777/rubik) could be used instead.
  - The cube movements use the notation presented in the picture bellow.
 
