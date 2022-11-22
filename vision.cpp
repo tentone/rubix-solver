@@ -121,12 +121,23 @@ class Vision {
 		Cube cube;
 
 		/**
+		 * Solution to the cube. Needs to be manually triggered.
+		 */
+		CubeSolution sol;
+
+		/**
 		 * State of the vision system.
 		 */
 		State state;
 
+		/**
+		 * Number of iteration used to solve the cube.
+		 */
+		int iterations = 10;
+
 		Vision() {
 			this->cube = Cube();
+			this->sol = CubeSolution();
 			this->state = SCANNING;
 		}
 
@@ -238,19 +249,22 @@ class Vision {
 
 				// S
 				if (key == 115) {
-					CubeSolution sol = CubeSolver::solveBF(cube, 5);
+					CubeSolution sol = CubeSolver::solveBF(cube, this->iterations);
+					if (sol.solved) {
+						this->sol = sol;
+					}
 					std::cout << sol.toString() << std::endl;
 				}
-				// I
-				else if (key == 105) {
-
-				}
+				// R
+				else if (key == 114) {this->cube.clear();}
+				// +
+				else if (key == 171) {this->iterations++;}
+				// -
+				else if (key == 173) {this->iterations--;}
 				// ESC
-				else if (key == 27) {
-					break;
-				}
+				else if (key == 27) {break;}
 
-				std::cout << key << std::endl;
+				// std::cout << key << std::endl;
 			}
 
 			cv::destroyWindow(window);
@@ -260,11 +274,16 @@ class Vision {
 		 * Draw textual information to screen.
 		 */
 		void draw_info(cv::Mat src) {
-			
-			
 			cv::Scalar color = cv::Scalar(0, 0, 255);
 
 			cv::putText(src, "State: " + std::to_string(this->state), cv::Point(10, 20), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+			cv::putText(src, "R to Reset", cv::Point(10, 40), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+			cv::putText(src, "S to Solve", cv::Point(10, 60), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+
+			if (this->sol.solved) {
+				cv::putText(src, this->sol.solved ? "Cube solved" : "Scan cube and press S to solve", cv::Point(10, src.rows - 30), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+			}
+			
 		}
 
 
