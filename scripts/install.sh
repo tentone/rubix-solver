@@ -6,6 +6,6 @@ if (( $EUID > 0 )); then
 fi
 
 echo " - Install build dependencies"
-apt install build-essential git gcc cmake make
+apt install build-essential git gcc cmake make libgtkglext1-dev libgtk2.0-dev
 
 echo " - Done!"

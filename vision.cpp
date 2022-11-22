@@ -96,6 +96,13 @@ bool quad_sort(Quad a, Quad b) {
 }
 
 
+enum State {
+	IDLE,
+	SCANNING,
+	SOLVE
+};
+
+
 class Vision {
 	public:
 		/**
@@ -103,8 +110,14 @@ class Vision {
 		 */
 		Cube cube;
 
+		/**
+		 * State of the vision system.
+		 */
+		State state;
+
 		Vision() {
 			this->cube = Cube();
+			this->state = SCANNING;
 		}
 
 		/**
@@ -202,13 +215,15 @@ class Vision {
 					}
 
 					// Debug the cube in action
-					this->debug_quads(image, quads);
+					this->draw_quads(image, quads);
 				}
 
-				// Filter image based on color
-				this->segment_colors(image, ranges[10], ranges[11]);
+				// Info
+				this->draw_info(image);
+				this->draw_cube(image);
 
-				// cv::imshow(window, image);
+				// Display image
+				cv::imshow(window, image);
 				int key = cv::waitKey(1);
 				if (key == 27) {
 					break;
@@ -217,6 +232,31 @@ class Vision {
 
 			cv::destroyWindow(window);
 		}
+		
+		/**
+		 * Draw textual information to screen.
+		 */
+		void draw_info(cv::Mat src) {
+			
+			
+			cv::Scalar color = cv::Scalar(0, 0, 255);
+
+			cv::putText(src, "State: " + std::to_string(this->state), cv::Point(10, 20), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+		}
+
+
+		/**
+		 * Draw the cube into the mat.
+		 */
+		void draw_cube(cv::Mat src) {
+
+			cv::Vec3f red = { 1.0f, 0.0f, 0.0 };
+			cv::Vec3f green = { 0.0f, 1.0f, 0.0 };
+			cv::Vec3f blue = { 0.0f, 0.0f, 1.0 };
+			
+			cv::viz3d::showBox("my window", "cube 1", { 1.0f, 1.0f, 1.0f }, red);
+			cv::viz3d::setObjectPosition("my window", "cube 1", { 5.0f, 0.0f, 5.0f });
+		}
 
 
 		/**
@@ -224,9 +264,7 @@ class Vision {
 		 * 
 		 * Creates a mat with debug information and displays it to the screen.
 		 */
-		void debug_quads(cv::Mat src, std::vector<Quad> quads) {
-			cv::Mat dst = src.clone();
-
+		void draw_quads(cv::Mat src, std::vector<Quad> quads) {
 			cv::Scalar color = cv::Scalar(255, 255, 255);
 			cv::Scalar colors[] = {
 				cv::Scalar(255, 0, 0),
@@ -240,19 +278,17 @@ class Vision {
 				std::vector<cv::Point> quad = quads[i].points;
 
 				// Draw Quad
-				cv::line(dst, quad[0], quad[1], colors[0]);
-				cv::line(dst, quad[1], quad[2], colors[1]);
-				cv::line(dst, quad[2], quad[3], colors[2]);
-				cv::line(dst, quad[3], quad[0], colors[3]);
+				cv::line(src, quad[0], quad[1], colors[0]);
+				cv::line(src, quad[1], quad[2], colors[1]);
+				cv::line(src, quad[2], quad[3], colors[2]);
+				cv::line(src, quad[3], quad[0], colors[3]);
 
 				// Index
-				cv::putText(dst, std::to_string(i), quads[i].center(), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+				cv::putText(src, std::to_string(i), quads[i].center(), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
 
 				// Color
-				cv::putText(dst, CubeFaceColors[quads[i].color], quad[0], cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+				cv::putText(src, CubeFaceColors[quads[i].color], quad[0], cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
 			}
-
-			cv::imshow("Quads", dst);
 		}
 
 		/**
@@ -352,7 +388,7 @@ class Vision {
 		 * Segment image based on rubix cube face colors.
 		 */
 		cv::Mat segment_colors(cv::Mat src, cv::Scalar min, cv::Scalar max) {
-			const bool debug = true;
+			const bool debug = false;
 
 			// Indicate if the close operation should be applied
 			const bool close_op = false;
