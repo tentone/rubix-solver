@@ -16,29 +16,18 @@
  * Color ranges in HSV used for filtering the color of the cube faces.
  */
 const cv::Scalar ranges[12] = {
-	// White
-	cv::Scalar(0, 0, 7),
-	cv::Scalar(255, 255, 35),
-
-	// Blue
-	cv::Scalar(93, 0, 50),
-	cv::Scalar(112, 255, 255),
-
-	// Yellow
-	cv::Scalar(26, 0, 50),
-	cv::Scalar(40, 255, 255),
-
-	// Green
-	cv::Scalar(58, 0, 50),
-	cv::Scalar(72, 255, 255),
-
-	// Orange
-	cv::Scalar(0, 75, 50),
-	cv::Scalar(12, 150, 255),
-
-	// Red
-	cv::Scalar(0, 0, 50),
-	cv::Scalar(12, 75, 255),
+	WHITE_MIN,
+	WHITE_MAX,
+	BLUE_MIN,
+	BLUE_MAX,
+	YELLOW_MIN,
+	YELLOW_MAX,
+	GREEN_MIN,
+	GREEN_MAX,
+	ORANGE_MIN,
+	ORANGE_MAX,
+	RED_MIN,
+	RED_MAX
 };
 
 
@@ -84,7 +73,7 @@ struct Quad {
  * Used to sort quads by their coordinates from top to bottom, left to right.
  */
 bool quad_sort(Quad a, Quad b) {
-	const float tolerance = 30.0;
+	const float tolerance = CONFIG_SORT_Y_TOL;
 
 	cv::Point a_p = a.center();
 	cv::Point b_p = b.center();
@@ -235,10 +224,10 @@ class Vision {
 							this->cube.cube[face][j] = quads[j].color;
 						}
 					}
-
-					// Debug the cube in action
-					this->draw_quads(image, quads);
 				}
+
+				// Debug the cube in action
+				this->draw_quads(image, quads);
 
 				// Info
 				this->draw_info(image);
@@ -327,7 +316,6 @@ class Vision {
 				
 			}
 		}
-
 
 		/**
 		 * Method to debug the quads detected in the image.
