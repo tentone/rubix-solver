@@ -10,6 +10,7 @@
 #include "config.cpp"
 #include "cube.cpp"
 #include "utils.cpp"
+#include "cube_solution.cpp"
 
 /**
  * Color ranges in HSV used for filtering the color of the cube faces.
@@ -279,11 +280,16 @@ class Vision {
 			cv::putText(src, "State: " + std::to_string(this->state), cv::Point(10, 20), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
 			cv::putText(src, "R to Reset", cv::Point(10, 40), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
 			cv::putText(src, "S to Solve", cv::Point(10, 60), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+			cv::putText(src, "-/+ Solve Depth: " + std::to_string(this->iterations), cv::Point(10, 80), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
 
 			if (this->sol.solved) {
-				cv::putText(src, this->sol.solved ? "Cube solved" : "Scan cube and press S to solve", cv::Point(10, src.rows - 30), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+				std::string sol = this->sol.toString();
+
+				cv::putText(src, sol, cv::Point(10, src.rows - 30), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
+
+			} else {
+				cv::putText(src, "Scan cube and press S to solve", cv::Point(10, src.rows - 30), cv::FONT_HERSHEY_DUPLEX, 0.5, color, 1, false);
 			}
-			
 		}
 
 
