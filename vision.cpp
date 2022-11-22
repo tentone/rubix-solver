@@ -249,13 +249,27 @@ class Vision {
 		 * Draw the cube into the mat.
 		 */
 		void draw_cube(cv::Mat src) {
-
-			cv::Vec3f red = { 1.0f, 0.0f, 0.0 };
-			cv::Vec3f green = { 0.0f, 1.0f, 0.0 };
-			cv::Vec3f blue = { 0.0f, 0.0f, 1.0 };
+			cv::Scalar colors[] = {
+				cv::Scalar(255, 255, 255), // W
+				cv::Scalar(255, 0, 0), // B
+				cv::Scalar(0, 255, 255), // Y
+				cv::Scalar(0, 0, 255), // G
+				cv::Scalar(0, 255, 120), // O
+				cv::Scalar(0, 255, 0), // R
+				cv::Scalar(0, 0, 0)
+			};
 			
-			cv::viz3d::showBox("my window", "cube 1", { 1.0f, 1.0f, 1.0f }, red);
-			cv::viz3d::setObjectPosition("my window", "cube 1", { 5.0f, 0.0f, 5.0f });
+			
+			for (int i = 0; i < 9; i++) {
+				int x = i % 3;
+				int y = i / 3;
+				int s = 20;
+				cv::Point2i offset = cv::Point2i(100, 100);
+
+				cv::Scalar color = colors[this->cube.cube[0][i]];
+				cv::rectangle(src, cv::Rect(x * s + offset.x, y * s + offset.y, s, s), color, 1); //cv::FILLED);
+				
+			}
 		}
 
 
