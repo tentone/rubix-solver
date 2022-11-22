@@ -195,7 +195,10 @@ class Vision {
 						// Center color define the face to fill info
 						int face = quads[4].color;
 
-						// TODO <ADD CODE HERE>
+						// Copy data from the detected model to the cube face
+						for (int j = 0; j < 9; j++) {
+							this->cube.cube[face][j] = quads[j].color;
+						}
 					}
 
 					// Debug the cube in action
