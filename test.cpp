@@ -8,6 +8,18 @@
 class Test {
 public:
     /**
+     * Randomly generate a cube and try to solve it.
+     */
+    static bool random(int n = 5) {
+        Cube cube = Cube();
+        cube.scramble(n);
+
+        CubeSolution sol = CubeSolver::solveBF(cube, n);
+
+        return sol.solved;
+    }
+
+    /**
      * Test ensures that are moves can be performed in CW and then CCW to reset the cube.
      */
     static bool movecwccw() {
@@ -52,5 +64,6 @@ public:
     {
         std::cout << "Test Cube CW/CCW Moves: " << Test::movecwccw() << std::endl;
         std::cout << "Test Cube face rotation: " << Test::rotateFace() << std::endl;
+        std::cout << "Test Cube random: " << Test::random() << std::endl;
     }
 };

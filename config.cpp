@@ -12,11 +12,11 @@
 // Quad approximation tolerance
 #define CONFIG_APPROX_TOL 0.04
 // Minimum cube cell area
-#define CONFIG_MIN_AREA 1500
+#define CONFIG_MIN_AREA 1000
 // Maximum cube cell area
 #define CONFIG_MAX_AREA 7000
 // Minimum difference between cell edges to consider a square
-#define CONFIG_EDGE_DIFF 100.0
+#define CONFIG_EDGE_DIFF 150.0
 // Minimum angle cosine to consider the quad as being rect (close to 0 to have 90 deg)
 #define CONFIG_MIN_COSINE -0.3
 // Maximum angle cosine to consider the quad as being rect (close to 0 to have 90 deg)

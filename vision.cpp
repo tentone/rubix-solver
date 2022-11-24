@@ -10,7 +10,7 @@
 #include "config.cpp"
 #include "cube.cpp"
 #include "utils.cpp"
-#include "cube_solution.cpp"
+#include "solution.cpp"
 
 /**
  * Color ranges in HSV used for filtering the color of the cube faces.

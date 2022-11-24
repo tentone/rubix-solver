@@ -8,6 +8,8 @@
 
 int main()
 {
+	// Test::test();
+
 	Vision vision = Vision();
 	vision.detect();
 }

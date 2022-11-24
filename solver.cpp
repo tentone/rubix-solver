@@ -8,7 +8,7 @@
 #include <list>
 
 #include "cube.cpp"
-#include "cube_solution.cpp"
+#include "solution.cpp"
 
 /**
  * The cube solver implements method to solve the rubix cube problem.
@@ -39,6 +39,14 @@ public:
 		for (int m = 0; m < 9; m++) {
 			// CCW / CW
 			for (int d = 0; d < 2; d++) {
+				// If its the same move but in oposite direction skip
+				if (solution.steps.size() > 0) {
+					CubeStep last = solution.steps.back();
+					if (last.move == m && last.direction != d) {
+						continue;
+					}
+				} 
+
 				// Clone solution and add step to list
 				CubeSolution sol = CubeSolution(solution);
 				sol.steps.push_back(CubeStep(m, d));
